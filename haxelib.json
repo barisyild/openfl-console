@@ -1,0 +1,15 @@
+{
+  "name": "openfl-console",
+  "url": "https://github.com/barisyild/openfl-console",
+  "license": "CUSTOM",
+  "tags": [],
+  "description": "",
+  "version": "0.0.1",
+  "releasenote": "",
+  "contributors": [
+    "barisyild"
+  ],
+  "dependencies": {
+    "openfl": ""
+  }
+}
