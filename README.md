@@ -5,11 +5,11 @@ Console overlays on top of your OpenFL application.<br/>
 Remote logging feature is also available to log to an external console.<br/>
 No special browser or player version is required.
 
-###New features
+### New features
 
-####Coming Soon
+#### Coming Soon
 
-###Main features
+### Main features
 
 * *Channels*
 * *Priorities* aka levels with colour code
@@ -20,7 +20,7 @@ No special browser or player version is required.
 * Super fast!
 * *[Addons]* adds specialized features
 
-###Other features
+### Other features
 * *filtering*/searching via exact match or regular expression
 * *Roller tool* _Ro_ - shows display map of what's under your mouse pointer
 * *Graph reporting* numeric values (such as FPS, memory, user definable)
@@ -32,7 +32,7 @@ No special browser or player version is required.
 * Easy to remove when no longer needed
 
 
-###Goal
+### Goal
 
 * The goal is for the project to be fully compatible with OpenFL and to add new features.
 
