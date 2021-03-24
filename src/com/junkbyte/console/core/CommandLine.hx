@@ -24,6 +24,7 @@
 */
 package com.junkbyte.console.core;
 
+import com.junkbyte.console.utils.FlashRegex;
 import Type.ValueType;
 import openfl.errors.Error;
 import openfl.utils.Function;
@@ -215,9 +216,8 @@ class CommandLine extends ConsoleCore {
         if(remoter.remoting == Remoting.RECIEVER){
             if(str.charAt(0) == "~"){
                 str = str.substring(1);
-            //}else if(str.search(new RegExp("\/"+localCommands.join("|\/"))) != 0){
-            //TODO: implement required
-            }else if(false){
+            }else if(FlashRegex.search(str, new EReg("\\/"+localCommands.join("|\\/"), "")) != 0){
+                //TODO: Check if Regex is working.
                 report("Run command at remote: "+str,-2);
 
                 var bytes:ByteArray = new ByteArray();
@@ -270,10 +270,10 @@ class CommandLine extends ConsoleCore {
     }
 
     private function execCommand(str:String):Void {
-        //var brk:Int = str.search(/[^\w]/);
-        //TODO: implement required
+        var brk:Int = FlashRegex.search(str, ~/[^\w]/);
 
-        var brk:Int = 0;
+        trace(brk);
+
         var cmd:String = str.substring(0, brk>0?brk:str.length);
         if(cmd == ""){
             setReturned(_saved.get(Executer.RETURNED), true);
@@ -354,13 +354,11 @@ class CommandLine extends ConsoleCore {
         var internalerrs:Int = 0;
         var len:Int = lines.length;
         var parts:Array<String> = [];
-        //var reg:RegExp = new RegExp("\\s*at\\s+("+Executer.CLASSES+"|"+openfl.Lib.getQualifiedClassName(this)+")");
-        //TODO: implement required
+        var reg:EReg = new EReg("\\s*at\\s+("+Executer.CLASSES+"|"+openfl.Lib.getQualifiedClassName(this)+")", "");
+        //TODO: Check if Regex is working.
         for (i in 0...len){
             var line:String = lines[i];
-            //if(line.search(reg) == 0)
-            //TODO: implement required
-            if(false)
+            if(FlashRegex.search(line, reg) == 0)
             {
                 // don't trace more than one internal errors :)
                 if(internalerrs>0 && i > 0) {
@@ -388,7 +386,8 @@ class CommandLine extends ConsoleCore {
         var sii:UInt = 0;
         var sii2:UInt = 0;
         for(X in _saved.keys()){
-            var ref:WeakRef = _saved.get(X);
+            trace(X);
+            var ref:WeakRef = _saved.getWeakRef(X);
             sii++;
             if(ref.reference==null) sii2++;
             report((ref.strong?"strong":"weak")+" <b>$"+X+"</b> = "+console.refs.makeString(ref.reference), -2);

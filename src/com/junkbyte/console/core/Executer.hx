@@ -24,6 +24,7 @@
 */
 package com.junkbyte.console.core;
 
+import com.junkbyte.console.utils.FlashRegex;
 import Type.ValueType;
 import openfl.utils.Function;
 import openfl.errors.Error;
@@ -129,9 +130,8 @@ class Executer extends EventDispatcher{
         while(indOpen>=0){
             var firstClose:Int = line.indexOf(")", indOpen);
             //if there is params...
-            //if(line.substring(indOpen+1, firstClose).search(/\w/)>=0){
-            //TODO: implement required
-            if(false){
+            if(FlashRegex.search(line.substring(indOpen+1, firstClose), ~/\w/)>=0)
+            {
                 // increment closing if there r more opening inside
                 var indopen2:Int = indOpen;
                 var indClose:Int = indOpen+1;

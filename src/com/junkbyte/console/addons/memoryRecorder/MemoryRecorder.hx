@@ -24,6 +24,7 @@
 */
 package com.junkbyte.console.addons.memoryRecorder;
 
+import com.junkbyte.console.utils.FlashRegex;
 import openfl.errors.Error;
 import openfl.utils.Function;
 import openfl.display.Sprite;
@@ -263,12 +264,12 @@ class MemoryRecorder extends EventDispatcher
         return classMatchesExpressionList(type, _ignoredClassExpressions);
     }
 
-    private function classMatchesExpressionList(type:Class, list:Array):Bool
+    private function classMatchesExpressionList(type:Class, list:Array<EReg>):Bool
     {
         var className:String = openfl.Lib.getQualifiedClassName(type);
         for (expression in list)
         {
-            if (className.search(expression) == 0)
+            if (FlashRegex.search(className, expression) == 0)
             {
                 return true;
             }

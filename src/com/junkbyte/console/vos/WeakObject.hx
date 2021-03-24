@@ -54,13 +54,6 @@ class WeakObject {
             }else{
                 _weakMap.set(n, new WeakRef(obj, strong));
             }
-        }else{
-            if(!strong)
-            {
-                _map.set(n, new WeakRef(obj, strong));
-            }else{
-                _weakMap.set(n, new WeakRef(obj, strong));
-            }
         }
     }
 

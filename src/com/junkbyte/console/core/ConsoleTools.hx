@@ -24,6 +24,7 @@
 */
 package com.junkbyte.console.core;
 
+import com.junkbyte.console.utils.FlashRegex;
 import Type.ValueType;
 import openfl.errors.Error;
 import openfl.utils.ByteArray;
@@ -135,13 +136,11 @@ class ConsoleTools extends ConsoleCore{
 
         var lines:Array<String> = [];
         var len:Int = lines.length;
-        //var reg:RegExp = new RegExp("Function|" + openfl.Lib.getQualifiedClassName(Console) + "|" + openfl.Lib.getQualifiedClassName(Cc));
-        //TODO: implement required
+        var reg:EReg = new EReg("Function|" + openfl.Lib.getQualifiedClassName(Console) + "|" + openfl.Lib.getQualifiedClassName(Cc), "");
+        //TODO: Check if Regex is working.
         var found:Bool = false;
         for (i in 2...len){
-            //if(!found && (lines[i].search(reg) != 0))
-            //TODO: implement required
-            if(false)
+            if(!found && (FlashRegex.search(lines[i], reg) != 0))
             {
                 found = true;
             }

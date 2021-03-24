@@ -24,6 +24,7 @@
 */
 package com.junkbyte.console.view;
 
+import com.junkbyte.console.utils.FlashRegex;
 import openfl.text.TextFormatAlign;
 import openfl.errors.Error;
 import openfl.utils.Function;
@@ -84,9 +85,7 @@ class MainPanel extends ConsolePanel {
     private var _cmdsInd:Int = -1;
     private var _priority:UInt = 0;
     private var _filterText:String = null;
-    //private var _filterRegExp:RegExp;
-    //TODO: implement required
-    private var _filterRegExp:Dynamic = null;
+    private var _filterRegExp:EReg;
     private var _clScope:String = "";
 
     private var _needUpdateMenu:Bool = false;
@@ -471,17 +470,15 @@ class MainPanel extends ConsolePanel {
     }
 
     private function lineShouldShow(line:Log):Bool{
-        /*return (
+        return (
             ( _priority == 0 || line.priority >= _priority)
             &&
             (
                 chShouldShow(line.ch)
                 || (_filterText != null && _viewingChannels.indexOf(Console.FILTER_CHANNEL) >= 0 && line.text.toLowerCase().indexOf(_filterText)>=0 )
-                || (_filterRegExp != null && _viewingChannels.indexOf(Console.FILTER_CHANNEL)>=0 && line.text.search(_filterRegExp)>=0 )
+                || (_filterRegExp != null && _viewingChannels.indexOf(Console.FILTER_CHANNEL)>=0 && FlashRegex.search(line.text, _filterRegExp)>=0 )
             )
-        );*/
-        //TODO: implement required
-        return true;
+        );
     }
 
     private function chShouldShow(ch:String):Bool
@@ -593,8 +590,8 @@ class MainPanel extends ConsolePanel {
     private function setFilterRegExp(expstr:String = ""):Void {
         if(expstr != null){
             _filterText = null;
-            //_filterRegExp = new RegExp(LogReferences.EscHTML(expstr), "gi");
-            //TODO: implement required
+            _filterRegExp = new EReg(LogReferences.EscHTML(expstr), "gi");
+            //TODO: Check if Regex is working.
             startFilter();
         }else{
             endFilter();
@@ -633,23 +630,21 @@ class MainPanel extends ConsolePanel {
     private function addFilterText(txt:String):String{
         if(_filterRegExp != null){
             // need to look into every match to make sure there no half way HTML tags and not inside the HTML tags it self in the match.
-            _filterRegExp.lastIndex = 0;
+            /*_filterRegExp.lastIndex = 0;
             var result:Dynamic = _filterRegExp.exec(txt);
             while (result != null) {
                 var i:Int = result.index;
                 var match:String = result[0];
-                //if(match.search("<|>")>=0)
-                //TODO: implement required
-                if(false)
+                if(FlashRegex.search(match, "<|>")>=0)
                 {
-                    //_filterRegExp.lastIndex -= match.length-match.search("<|>");
-                    //TODO: implement required
+                    _filterRegExp.lastIndex -= FlashRegex.search(match.length-match, "<|>");
                 }else if(txt.lastIndexOf("<", i)<=txt.lastIndexOf(">", i)){
                     txt = txt.substring(0, i)+"<u>"+txt.substring(i, i+match.length)+"</u>"+txt.substring(i+match.length);
                     _filterRegExp.lastIndex+=7; // need to add to satisfy the fact that we added <u> and </u>
                 }
                 result = _filterRegExp.exec(txt);
-            }
+            }*/
+            //TODO: implement required
         }else if(_filterText != null){
             // could have been simple if txt.replace replaces every match.
             var lowercase:String = txt.toLowerCase();

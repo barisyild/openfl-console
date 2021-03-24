@@ -23,6 +23,7 @@
 *
 */
 package com.junkbyte.console.vos;
+import com.junkbyte.console.utils.FlashRegex;
 import openfl.utils.ByteArray;
 import com.junkbyte.console.core.Executer;
 import com.junkbyte.console.vos.WeakRef;
@@ -50,7 +51,7 @@ class GraphInterest {
     public function setObject(object:Dynamic, property:String):Float {
         _ref = new WeakRef(object);
         _prop = property;
-        //useExec = _prop.search(/[^\w\d]/) >= 0;
+        useExec = FlashRegex.search(_prop, ~/[^\w\d]/) >= 0;
             //
         v = getCurrentValue();
         avg = v;
