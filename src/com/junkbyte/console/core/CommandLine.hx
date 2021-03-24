@@ -143,34 +143,32 @@ class CommandLine extends ConsoleCore {
         for (X in _slashCmds.keys()){
             var cmd:SlashCommand = _slashCmds[X];
             if(config.commandLineAllowed || cmd.allow)
-                all.push(["/"+X+" ", cmd.d != null ? cmd.d : null]);
+                all.push(["/"+X+" ", cmd.d != null ? cmd.d : ""]);
         }
         if(config.commandLineAllowed){
-            /*for (var Y:String in _saved){
+            for (Y in _saved.keys()){
                 all.push(["$"+Y, LogReferences.ShortClassName(_saved.get(Y))]);
-            }*/
-            //TODO: implement required
+            }
             if(_scope){
                 all.push(["this", LogReferences.ShortClassName(_scope)]);
-                //all = all.concat(console.refs.getPossibleCalls(_scope));
+                //all = all.concat([console.refs.getPossibleCalls(_scope)]);
                 //TODO: implement required
-                all = all.concat([console.refs.getPossibleCalls(_scope)]);
             }
         }
         str = str.toLowerCase();
         var hints:Array<Array<String>> = new Array();
-        //TODO: for each(var canadate:Array in all){
+
         for(canadate in all){
             if(canadate[0].toLowerCase().indexOf(str) == 0){
                 hints.push(canadate);
             }
         }
-        //TODO: hints = hints.sort(function(a:Array, b:Array):Int {
         hints.sort(function(a:Array<String>, b:Array<String>):Int {
             if(a[0].length < b[0].length) return -1;
             if(a[0].length > b[0].length) return 1;
             return 0;
         });
+
         if(max > 0 && hints.length > max){
             hints.splice(max, hints.length);
             hints.push(["..."]);
@@ -243,10 +241,9 @@ class CommandLine extends ConsoleCore {
                 var exe:Executer = new Executer();
                 exe.addEventListener(Event.COMPLETE, onExecLineComplete, false, 0, true);
                 if(saves != null){
-                    /*for(X in _saved){
-                        if(!saves[X]) saves[X] = _saved[X];
-                    }*/
-                    //TODO: implement reqired
+                    for(X in _saved.keys()){
+                        if(!Reflect.hasField(saves, X)) Reflect.setField(saves, X, _saved.get(X));
+                    }
                 }else{
                     //TODO: cast
                     saves = cast _saved;
@@ -275,8 +272,6 @@ class CommandLine extends ConsoleCore {
     private function execCommand(str:String):Void {
         //var brk:Int = str.search(/[^\w]/);
         //TODO: implement required
-
-        throw "implement required";
 
         var brk:Int = 0;
         var cmd:String = str.substring(0, brk>0?brk:str.length);
@@ -392,13 +387,12 @@ class CommandLine extends ConsoleCore {
         report("Saved vars: ", -1);
         var sii:UInt = 0;
         var sii2:UInt = 0;
-        /*for(X in _saved){
-            var ref:WeakRef = _saved.getWeakRef(X);
+        for(X in _saved.keys()){
+            var ref:WeakRef = _saved.get(X);
             sii++;
             if(ref.reference==null) sii2++;
             report((ref.strong?"strong":"weak")+" <b>$"+X+"</b> = "+console.refs.makeString(ref.reference), -2);
-        }*/
-        //TODO: implement required
+        }
         report("Found "+sii+" item(s), "+sii2+" empty.", -1);
     }
 

@@ -319,9 +319,7 @@ class Remoting extends ConsoleCore {
     }
 
     private function generateId():String{
-        //return new Date().time + "." + Math.floor(Math.random() * 100000);
-        //TODO: implement required
-        return "implement required";
+        return Date.now().getTime() + "." + Math.floor(Math.random() * 100000);
     }
 
     private function startSharedConnection(targetmode:UInt):Bool{

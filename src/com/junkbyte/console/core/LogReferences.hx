@@ -296,8 +296,8 @@ class LogReferences extends ConsoleCore
         //TODO: Fix this issue!
     }
 
-    public function getPossibleCalls(obj:Dynamic):Array<String> {
-        var list:Array<String> = new Array();
+    public function getPossibleCalls(obj:Dynamic):Array<Array<String>> {
+        var list:Array<Array<String>> = new Array();
         /*var V:XML = describeType(obj);
         var nodes:XMLList = V.method;
         for (methodX in nodes) {

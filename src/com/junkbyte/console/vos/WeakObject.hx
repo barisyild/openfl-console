@@ -28,37 +28,79 @@ package com.junkbyte.console.vos;
  * @private
  */
 
-//TODO: Warning, this class has been added to compile the program completely, it is completely not working.
-//TODO: fix this class!
 class WeakObject {
 
-    private var _item:Array<Dynamic>;
-    private var _dir:Dynamic;
+    private var _map:Map<String, WeakRef>;
+    private var _weakMap:Map<String, WeakRef>;
 
     public function new() {
-        _dir = {};
+        _map = new Map();
+        _weakMap = new Map();
     }
-    public function set(n:String, obj:Dynamic, strong:Bool = false):Void {
-        if(obj == null)
-        {
-            Reflect.deleteField(_dir, n);
-        }
-        else
-        {
-            Reflect.setField(_dir, n, new WeakRef(obj, strong));
-        }
-    }
+
     public function get(n:String):Dynamic {
         var ref:WeakRef = getWeakRef(n);
         return ref != null?ref.reference:null;
     }
-    public function getWeakRef(n:String):WeakRef{
-        return cast(Reflect.field(_dir, n), WeakRef);
+
+    public function set(n:String, obj:Dynamic, strong:Bool = false):Void {
+        remove(n);
+
+        if(obj != null)
+        {
+            if(strong)
+            {
+                _map.set(n, new WeakRef(obj, strong));
+            }else{
+                _weakMap.set(n, new WeakRef(obj, strong));
+            }
+        }else{
+            if(!strong)
+            {
+                _map.set(n, new WeakRef(obj, strong));
+            }else{
+                _weakMap.set(n, new WeakRef(obj, strong));
+            }
+        }
     }
-    //
-    // PROXY
-    //
-    function getProperty(n:Dynamic):Dynamic {
+
+    public function remove(n:String):Void {
+        if(_weakMap.exists(n))
+        {
+            _weakMap.remove(n);
+        }else if(_map.exists(n))
+        {
+            _map.remove(n);
+        }
+    }
+
+    public function exists(n:String):Bool {
+        return _weakMap.exists(n) || _map.exists(n);
+    }
+
+    public function keys():Array<String>
+    {
+        var keys:Array<String> = [];
+        for(key in _weakMap.keys())
+        {
+            keys.push(key);
+        }
+        for(key in _map.keys())
+        {
+            keys.push(key);
+        }
+        return keys;
+    }
+
+    public function getWeakRef(n:String):WeakRef {
+        if(_weakMap.exists(n))
+            return _weakMap.get(n);
+        else if(_map.exists(n))
+            return _map.get(n);
+        return null;
+    }
+
+    /*public function getProperty(n:Dynamic):Dynamic {
         return get(n);
     }
 
@@ -100,5 +142,5 @@ class WeakObject {
 
     public function toString():String{
         return "[WeakObject]";
-    }
+    }*/
 }

@@ -24,9 +24,10 @@
 */
 package com.junkbyte.console.core;
 
+import haxe.ds.WeakMap;
+import openfl.system.System;
 import openfl.errors.Error;
 import com.junkbyte.console.Console;
-import openfl.system.System;
 import openfl.utils.Dictionary;
 
 /**
@@ -35,14 +36,15 @@ import openfl.utils.Dictionary;
 class MemoryMonitor extends ConsoleCore {
 
     private var _namesList:Map<String, Bool>;
-    private var _objectsList:Dynamic;
+    private var _objectsList:#if !html5 WeakMap #else Map #end<Dynamic, String>;
     private var _count:UInt;
     //
     //
     public function new(m:Console) {
         super(m);
-        _namesList = new Map<String, Bool>();
-        _objectsList = {};
+        _namesList = new Map();
+        //TODO: Find a way to run WeakMap in html5.
+        _objectsList = new #if !html5 WeakMap #else Map #end<#if !html5 Dynamic #else String #end, String>();
 
         console.remoter.registerCallback("gc", gc);
     }
@@ -51,13 +53,13 @@ class MemoryMonitor extends ConsoleCore {
         var className:String = openfl.Lib.getQualifiedClassName(obj);
         if(n == null) n = className+"@"+openfl.Lib.getTimer();
 
-        if(Reflect.hasField(_objectsList, obj)){
-            if(_namesList[Reflect.field(_objectsList, obj)]){
-                unwatch(Reflect.field(_objectsList, obj));
+        if(_objectsList.exists(obj)){
+            if(_namesList[_objectsList.get(obj)]){
+                unwatch(_objectsList.get(obj));
             }
         }
         if(_namesList[n]){
-            if(_objectsList[obj] == n){
+            if(_objectsList.get(obj) == n){
                 _count--;
             }else{
                 n = n+"@"+openfl.Lib.getTimer()+"_"+Math.floor(Math.random()*100);
@@ -65,15 +67,15 @@ class MemoryMonitor extends ConsoleCore {
         }
         _namesList[n] = true;
         _count++;
-        _objectsList[obj] = n;
+        _objectsList.set(obj, n);
         //if(!config.quiet) report("Watching <b>"+className+"</b> as <p5>"+ n +"</p5>.",-1);
         return n;
     }
 
     public function unwatch(n:String):Void {
-        for (X in Reflect.fields(_objectsList)) {
-            if(Reflect.field(_objectsList, X) == n){
-                Reflect.deleteField(_objectsList, X);
+        for (K in _objectsList.iterator()) {
+            if(_objectsList.get(K) == n){
+                Reflect.deleteField(_objectsList, K);
             }
         }
         if(_namesList[n])
@@ -87,10 +89,11 @@ class MemoryMonitor extends ConsoleCore {
     //
     public function update():Void {
         if(_count == 0) return;
+
         var arr:Array<String> = new Array();
         var o:Dynamic = {};
-        for (X in Reflect.fields(_objectsList)) {
-            Reflect.setField(o, Reflect.field(_objectsList, X), true);
+        for (V in _objectsList) {
+            Reflect.setField(o, V, true);
         }
 
         for(Y in _namesList.keys()){

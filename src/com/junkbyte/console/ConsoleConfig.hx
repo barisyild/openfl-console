@@ -155,12 +155,11 @@ class ConsoleConfig {
      * Default formatter returns as 'MM:SS' (10:20)
      * </p>
      */
-    public var timeStampFormatter:Function = function(timer:UInt):String
+    //public var timeStampFormatter:Function = function(timer:UInt):String
+    public function timeStampFormatter(timer:UInt):String
     {
         var s:UInt = Std.int(timer*0.001);
-        //return makeTimeDigit(Std.int(s / 60)) + ":" + makeTimeDigit(Std.int(s % 60));
-        //TODO: implement required
-        return "implement required";
+        return makeTimeDigit(Std.int(s / 60)) + ":" + makeTimeDigit(Std.int(s % 60));
     }
 
     private function makeTimeDigit(v:UInt):String {
