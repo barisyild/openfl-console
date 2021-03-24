@@ -392,12 +392,15 @@ class PanelsManager {
             }
             var numchildren:Int = console.numChildren;
             for(i in 0...numchildren){
-                var panel:ConsolePanel = cast(console.getChildAt(i), ConsolePanel);
-                if(panel != null && panel.visible){
-                    X.push(panel.x);
-                    X.push(panel.x + panel.width);
-                    Y.push(panel.y);
-                    Y.push(panel.y + panel.height);
+                if(Std.is(console.getChildAt(i), ConsolePanel))
+                {
+                    var panel:ConsolePanel = cast(console.getChildAt(i), ConsolePanel);
+                    if(panel != null && panel.visible){
+                        X.push(panel.x);
+                        X.push(panel.x + panel.width);
+                        Y.push(panel.y);
+                        Y.push(panel.y + panel.height);
+                    }
                 }
             }
             target.registerSnaps(X, Y);

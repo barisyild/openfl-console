@@ -127,8 +127,7 @@ class CommandLine extends ConsoleCore {
         // if it is a function it needs to be strong reference atm,
         // otherwise it fails if the function passed is from a dynamic class/instance
         if(Type.typeof(obj) == ValueType.TFunction) strong = true;
-        //n = n.replace(/[^\w]*/g, "");
-        //TODO: implement required
+        n = FlashRegex.replace(n, ~/[^\w]*/g, "");
         if(RESERVED.indexOf(n)>=0){
             report("ERROR: The name ["+n+"] is reserved",10);
             return;
@@ -152,8 +151,7 @@ class CommandLine extends ConsoleCore {
             }
             if(_scope){
                 all.push(["this", LogReferences.ShortClassName(_scope)]);
-                //all = all.concat([console.refs.getPossibleCalls(_scope)]);
-                //TODO: implement required
+                all.concat(console.refs.getPossibleCalls(_scope));
             }
         }
         str = str.toLowerCase();
@@ -193,8 +191,7 @@ class CommandLine extends ConsoleCore {
     }
 
     public function addSlashCommand(n:String, callback:Function, desc:String = "", alwaysAvailable:Bool = true, endOfArgsMarker:String = ";"):Void {
-        //n = n.replace(/[^\w]*/g, "");
-        //TODO: implement required
+        n = FlashRegex.replace(n, ~/[^\w]*/g, "");
         if(_slashCmds[n] != null){
             var prev:SlashCommand = _slashCmds[n];
             if(!prev.user) {
@@ -211,8 +208,8 @@ class CommandLine extends ConsoleCore {
 
     public function run(str:String, saves:Dynamic = null):Dynamic {
         if(str == null) return null;
-        //str = str.replace(/\s*/,"");
-        //TODO: implement required
+        str = FlashRegex.replace(str, new EReg("/\\s*/", ""), "");
+        //TODO: Check if Regex is working.
         if(remoter.remoting == Remoting.RECIEVER){
             if(str.charAt(0) == "~"){
                 str = str.substring(1);
@@ -271,8 +268,6 @@ class CommandLine extends ConsoleCore {
 
     private function execCommand(str:String):Void {
         var brk:Int = FlashRegex.search(str, ~/[^\w]/);
-
-        trace(brk);
 
         var cmd:String = str.substring(0, brk>0?brk:str.length);
         if(cmd == ""){
@@ -386,7 +381,6 @@ class CommandLine extends ConsoleCore {
         var sii:UInt = 0;
         var sii2:UInt = 0;
         for(X in _saved.keys()){
-            trace(X);
             var ref:WeakRef = _saved.getWeakRef(X);
             sii++;
             if(ref.reference==null) sii2++;

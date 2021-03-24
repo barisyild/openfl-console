@@ -220,10 +220,10 @@ class MemoryRecorder extends EventDispatcher
         var output:String = "";
         for (stack in sample.stack)
         {
-            //stack = stack.replace(/.*?\:\:/, "");
-            //stack = stack.replace(/\[.*?\:([0-9]+)\]/, ":$1");
-            //TODO: implement required
-        output += stack + "; ";
+            stack = FlashRegex.replace(stack, ~/.*?\\:\\:/, "");
+            stack = FlashRegex.replace(stack, ~/\[.*?\\:([0-9]+)\\]/, ":$1");
+            //TODO: Check if Regex is working.
+            output += stack + "; ";
         }
         return output;
     }

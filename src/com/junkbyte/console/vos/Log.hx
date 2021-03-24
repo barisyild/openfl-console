@@ -23,6 +23,7 @@
 *
 */
 package com.junkbyte.console.vos;
+import com.junkbyte.console.utils.FlashRegex;
 import openfl.utils.ByteArray;
 
 /**
@@ -70,8 +71,11 @@ class Log{
     }
 
     public function plainText():String{
-        //return text.replace(/<.*?>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-        //TODO: implement required
+        var text = this.text;
+
+        text = FlashRegex.replace(text, ~/<.*?>/g, "");
+        text = FlashRegex.replace(text, ~/&lt;/g, "<");
+        text = FlashRegex.replace(text, ~/&gt;/g, ">");
         return text;
     }
     public function toString():String{

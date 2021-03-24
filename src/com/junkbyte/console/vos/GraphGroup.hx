@@ -34,19 +34,19 @@ class GraphGroup {
     public static inline var FPS:UInt = 1;
     public static inline var MEM:UInt = 2;
 
-    public var type:UInt;
-    public var name:String;
+    public var type:UInt = 0;
+    public var name:String = null;
     public var freq:Int = 1; // update every n number of frames.
-    public var low:Float;
-    public var hi:Float;
-    public var fixed:Bool;
-    public var averaging:UInt;
-    public var inv:Bool;
+    public var low:Float = 0;
+    public var hi:Float = 0;
+    public var fixed:Bool = false;
+    public var averaging:UInt = 0;
+    public var inv:Bool = false;
     public var interests:Array<GraphInterest> = [];
-    public var rect:Rectangle;
+    public var rect:Rectangle = null;
     //
     //
-    public var idle:Int;
+    public var idle:Int = 0;
 
     public function new(n:String){
         name = n;

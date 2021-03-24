@@ -5,4 +5,14 @@ class FlashRegex {
 
         return m ? regex.matchedPos().pos : -1;
     }
+
+    public static function match(text:String, regex:EReg):Bool
+    {
+        return search(text, regex) != -1;
+    }
+
+    public static function replace(text:String, search:EReg, value:String):String
+    {
+        return search.replace(text, value);
+    }
 }

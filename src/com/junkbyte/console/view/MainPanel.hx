@@ -83,7 +83,7 @@ class MainPanel extends ConsolePanel {
     private var _ignoredChannels:Array<String> = null;
     private var _extraMenus:Map<String, Array<Dynamic>> = new Map();
     private var _cmdsInd:Int = -1;
-    private var _priority:UInt = 0;
+    private var _priority:Int = 0;
     private var _filterText:String = null;
     private var _filterRegExp:EReg;
     private var _clScope:String = "";
@@ -246,8 +246,7 @@ class MainPanel extends ConsolePanel {
      */
     public function addMenu(key:String, f:Function, args:Array<Dynamic>, rollover:String):Void {
         if(key != null){
-            //key = key.replace(/[^\w]*/g, "");
-            //TODO: implement required
+            key = FlashRegex.replace(key, ~/[^\w]*/g, "");
             if(f == null){
                 _extraMenus.remove(key);
             }else{
@@ -958,7 +957,6 @@ class MainPanel extends ConsolePanel {
         txtField.setSelection(0, 0);
         stopDrag();
         var t:String = e.text;
-        trace(t);
         if(t == "pause"){
             if(console.paused){
                 console.paused = false;

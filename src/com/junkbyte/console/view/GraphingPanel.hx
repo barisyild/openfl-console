@@ -34,8 +34,8 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 
 /**
-	 * @private
-	 */
+ * @private
+ */
 class GraphingPanel extends ConsolePanel {
     //
     public static inline var FPS:String = "fpsPanel";
@@ -43,7 +43,7 @@ class GraphingPanel extends ConsolePanel {
     //
     private var _group:GraphGroup;
     private var _interest:GraphInterest;
-    private var _infoMap:Dynamic = {};
+    private var _infoMap:Map<String, Array<Dynamic>> = new Map();
     private var _menuString:String;
     //
     private var _type:String;
@@ -89,6 +89,7 @@ class GraphingPanel extends ConsolePanel {
         txtField = makeTF("menuField");
         txtField.height = style.menuFontSize+4;
         txtField.y = -3;
+        txtField.selectable = false;
         registerTFRoller(txtField, onMenuRollOver, linkHandler);
         registerDragger(txtField); // so that we can still drag from textfield
         addChild(txtField);
@@ -104,7 +105,9 @@ class GraphingPanel extends ConsolePanel {
 
         _menuString = "<menu>";
         if(_type == MEM){
+            #if !html5
             _menuString += " <a href=\"event:gc\">G</a> ";
+            #end
         }
         _menuString += "<a href=\"event:reset\">R</a> <a href=\"event:close\">X</a></menu></low></r>";
 
@@ -122,7 +125,7 @@ class GraphingPanel extends ConsolePanel {
     }
 
     public function reset():Void {
-        _infoMap = {};
+        _infoMap.clear();
         graph.graphics.clear();
         if(!_group.fixed)
         {
@@ -194,22 +197,20 @@ class GraphingPanel extends ConsolePanel {
         var diffGraph:Float = highest-lowest;
         var listchanged:Bool = false;
         if(draw) {
-            cast(group.inv?highTxt:lowTxt, TextField).text = Std.string(group.low);
-            cast(group.inv?lowTxt:highTxt, TextField).text = Std.string(group.hi);
+            cast(group.inv ? highTxt : lowTxt, TextField).text = Std.string(group.low);
+            cast(group.inv ? lowTxt : highTxt, TextField).text = Std.string(group.hi);
             graph.graphics.clear();
         }
         var interest:GraphInterest;
         for(interest in interests){
             _interest = interest;
             var n:String = _interest.key;
-            var info:Array<Dynamic> = Reflect.field(_infoMap, n);
+            var info:Array<Dynamic> = _infoMap.get(n);
             if(info == null){
                 listchanged = true;
                 // used to use InterestInfo
-                //info = [_interest.col.toString(16), new Array()];
-                //TODO: implement required
-                info = [Std.string(_interest.col), new Array()];
-                Reflect.setField(_infoMap, n, info);
+                info = [StringTools.hex(_interest.col), new Array()];
+                _infoMap.set(n, info);
             }
             var history:Array<Float> = info[1];
             if(push == 1) {
@@ -256,7 +257,7 @@ class GraphingPanel extends ConsolePanel {
                 }
             }
         }
-        for(X in Reflect.fields(_infoMap)){
+        for(X in _infoMap.keys()){
             var found:Bool = false;
             for(interest in interests){
                 if(interest.key == X)
@@ -266,7 +267,7 @@ class GraphingPanel extends ConsolePanel {
             }
             if(!found){
                 listchanged = true;
-                Reflect.deleteField(_infoMap, X);
+                _infoMap.remove(X);
             }
         }
         if(draw && (listchanged || _type != null)) updateKeyText();
@@ -280,15 +281,13 @@ class GraphingPanel extends ConsolePanel {
             }else if(_type == FPS){
                 //str += _interest.avg.toFixed(1);
                 //TODO: implement required
-                str += Std.string(_interest.avg);
-            }else{
+                str += Std.string(Std.int(_interest.avg));
+            }else if(_type == MEM){
                 str += _interest.v+"mb";
             }
         }else{
-            for(X in Reflect.fields(_infoMap)){
-                //str += " <font color='#" + _infoMap[X][0] + "'>"+X+"</font>";
-                //TODO: implement required
-                str += " <font color='#FFFFFF'>implement required</font>";
+            for(X in _infoMap.keys()){
+                str += " <font color='#" + _infoMap.get(X)[0] + "'>"+X+"</font>";
             }
             str += " |";
         }
@@ -298,7 +297,6 @@ class GraphingPanel extends ConsolePanel {
 
     private function linkHandler(e:TextEvent):Void {
         cast(e.currentTarget, TextField).setSelection(0, 0);
-        trace(e.text);
         if(e.text == "reset"){
             reset();
         }else if(e.text == "close"){
@@ -313,7 +311,6 @@ class GraphingPanel extends ConsolePanel {
     }
 
     private function onMenuRollOver(e:TextEvent):Void {
-        trace(e.text);
         var txt:String = e.text != null ? StringTools.replace(e.text, "event:", "") : "";
         if(txt == "gc"){
             txt = "Garbage collect::Requires debugger version of flash player";

@@ -33,14 +33,14 @@ import com.junkbyte.console.vos.WeakRef;
 	 */
 class GraphInterest {
 
-    private var _ref:WeakRef;
-    public var _prop:String;
-    private var useExec:Bool;
-    public var key:String;
+    private var _ref:WeakRef = null;
+    public var _prop:String = null;
+    private var useExec:Bool = false;
+    public var key:String = null;
     //TODO: Warning Modified arguement, col:Number => col:Int
-    public var col:Int;
-    public var v:Float;
-    public var avg:Float;
+    public var col:Int = 0x000000;
+    public var v:Float = 0;
+    public var avg:Float = 0;
 
     //TODO: Warning Modified arguement, color:Number => color:Int
     public function new(keystr:String = "", color:Int = 0):Void {

@@ -145,15 +145,14 @@ class Executer extends EventDispatcher{
                 // must be a better way to see if its letter/digit or not :/
                 var isfun:Bool = false;
                 var fi:Int = indOpen-1;
-                /*while(true){
+                while(true){
                     var char:String = line.charAt(fi);
-                    if(char.match(/[^\s]/) || fi<=0) {
-                        if(char.match(/\w/)) isfun = true;
+                    if(FlashRegex.match(char, ~/[^\s]/) || fi<=0) {
+                        if(FlashRegex.match(char, ~/\w/)) isfun = true;
                         break;
                     }
                     fi--;
-                }*/
-                //TODO: implement required
+                }
                 if(isfun){
                     var params:Array<String> = inside.split(",");
                     //trace("#"+_values.length+" stores function params ["+params+"]");
@@ -163,10 +162,12 @@ class Executer extends EventDispatcher{
                     }*/
                     //TODO: implement required
                 }else{
-                    /*var groupv:ExeValue = new ExeValue(groupv);
+                    //var groupv:ExeValue = new ExeValue(groupv);
+                    //TODO: Check this weird code?
+
+                    var groupv:ExeValue = new ExeValue();
                     line = tempValue(line,groupv, indOpen, indClose+1);
-                    groupv.setValue(execOperations(ignoreWhite(inside)).value);*/
-                    //TODO: implement required
+                    groupv.setValue(execOperations(ignoreWhite(inside)).value);
                 }
 
                 //trace(line);
@@ -232,7 +233,7 @@ class Executer extends EventDispatcher{
         // EXEC math operations
     for(i = 1;i<len;i+=2){
         op = seq[i];
-        if(op.replace(setter,"")!="") {
+        if(FlashRegex.replace(op, setter,"")!="") {
             res = operate(seq[i-1], op, seq[i+1]);
             //debug("operate: "+seq[i-1].value, op, seq[i+1].value, "=", res);
             var sv:ExeValue = ExeValue(seq[i-1]);
@@ -247,7 +248,7 @@ class Executer extends EventDispatcher{
     var v:ExeValue = seq[0];
     for(i = 1;i<len;i+=2){
         op = seq[i];
-        if(op.replace(setter,"")==""){
+        if(FlashRegex.replace(op, setter,"")==""){
             v = seq[i-1];
             var subject:ExeValue = seq[i+1];
             if(op.length>1) op = op.substring(0,op.length-1);
@@ -280,8 +281,7 @@ class Executer extends EventDispatcher{
         }
         //
         //
-        //var reg:RegExp = /\.|\(/g;
-        //TODO: implement required
+        var reg:EReg = ~/\.|\(/g;
         //var result:Dynamic = reg.exec(str);
         //TODO: implement required
         var result:Dynamic = null;
@@ -531,13 +531,10 @@ class Executer extends EventDispatcher{
 
     private function ignoreWhite(str:String):String{
         // can't just do /\s*(.*?)\s*/  :(  any better way?
-        //str = str.replace(/\s*(.*)/,"$1");
-        //TODO: implement required
+        str = FlashRegex.replace(str, ~/\s*(.*)/,"$1");
         var i:Int = str.length-1;
         while(i>0){
-            //if(str.charAt(i).match(/\s/)) str = str.substring(0,i);
-            //TODO: implement required
-            if(true) str = str.substring(0,i);
+            if(FlashRegex.match(str.charAt(i), ~/\s/)) str = str.substring(0,i);
             else break;
             i--;
         }

@@ -64,12 +64,10 @@ class ChannelsPanel extends ConsolePanel{
     }
 
     private function onMenuRollOver(e:TextEvent):Void {
-        trace(e.text);
         console.panels.mainPanel.onMenuRollOver(e, this);
     }
 
     private function linkHandler(e:TextEvent):Void {
-        trace(e.text);
         txtField.setSelection(0, 0);
         if(e.text == "close"){
             console.panels.channelsPanel = false;

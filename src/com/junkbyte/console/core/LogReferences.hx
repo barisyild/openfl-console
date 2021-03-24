@@ -25,6 +25,7 @@
 
 package com.junkbyte.console.core;
 
+import com.junkbyte.console.utils.FlashRegex;
 import haxe.io.Bytes;
 import Type.ValueType;
 import openfl.errors.Error;
@@ -298,6 +299,9 @@ class LogReferences extends ConsoleCore
 
     public function getPossibleCalls(obj:Dynamic):Array<Array<String>> {
         var list:Array<Array<String>> = new Array();
+
+        //Reflect.fields(obj);
+
         /*var V:XML = describeType(obj);
         var nodes:XMLList = V.method;
         for (methodX in nodes) {
@@ -325,13 +329,12 @@ class LogReferences extends ConsoleCore
 
 
     public static function EscHTML(str:String):String{
-        //return str.replace(/</g, "&lt;").replace(/\>/g, "&gt;").replace(/\x00/g, "");
-        //TODO: implement required
+        str = FlashRegex.replace(str, ~/</g, "&lt;");
+        str = FlashRegex.replace(str, ~/\\>/g, "&gt;");
+        //TODO: Check if Regex is working.
+        str = FlashRegex.replace(str, ~/\x00/g, "");
         return str;
     }
-    /*public static function UnEscHTML(str:String):String{
-	 		return str.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-		}*/
     /** 
 		 * Produces class name without package path
 		 * e.g: openfl.display.Sprite => Sprite
