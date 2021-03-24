@@ -24,6 +24,12 @@
 */
 package com.junkbyte.console.view;
 
+import openfl.display.TileContainer;
+import openfl.display.Tilemap;
+import com.junkbyte.console.core.TileTools;
+import openfl.display.Tile;
+import openfl.display.MovieClip;
+import openfl.display.Tilemap;
 import openfl.text.TextFieldAutoSize;
 import com.junkbyte.console.Console;
 import com.junkbyte.console.KeyBind;
@@ -103,15 +109,17 @@ class RollerPanel extends ConsolePanel{
             objs.push(stg);// if nothing at least have stage.
         }
         for(child in objs){
-            var chain:Array<DisplayObject> = [child];
-            var par:DisplayObjectContainer = child.parent;
+            var chain:Array<Dynamic> = [child];
+
+            var par:DisplayObject = child.parent;
             while(par != null){
                 chain.unshift(par);
                 par = par.parent;
             }
+
             var len:Int = chain.length;
             for (i in 0...len){
-                var obj:DisplayObject = chain[i];
+                var obj:Dynamic = chain[i];
                 //if(stepMap[obj] == undefined){
                 if(stepMap[obj] == null){
                     stepMap[obj] = i;
@@ -123,7 +131,18 @@ class RollerPanel extends ConsolePanel{
                         j--;
                     }
 
-                    var n:String = obj.name;
+                    var n:String;
+
+                    if(Std.is(obj, DisplayObject))
+                    {
+                        n = cast(obj, DisplayObject).name;
+                    }else if(Reflect.hasField(obj, "name"))
+                    {
+                        n = obj.name;
+                    }else{
+                        n = "instance";
+                    }
+
                     var ind:UInt;
                     if(dolink && console.config.useObjectLinking) {
                         ind = console.refs.setLogRef(obj);
@@ -141,9 +160,90 @@ class RollerPanel extends ConsolePanel{
                     }else {
                         str +=  "<p2><i>"+n+"</i></p2><br/>";
                     }
+
+
+
+                    if(console.config.displayRollerTilemapCapturingEnabled && Std.is(obj, Tilemap))
+                    {
+                        str += __processTilemapString(cast obj, dolink, i + 1);
+                    }
                 }
             }
         }
+        return str;
+    }
+
+    private function __processTilemapString(tilemap:Tilemap, dolink:Bool, depth:Int = 0):String
+    {
+        var str:String = "";
+        var parentBlackList:Array<Tile> = [];
+
+        var tileDepthArray:Array<com.junkbyte.console.core.TileDepth> = cast TileTools.hitList(tilemap);
+
+        if(tileDepthArray != null)
+        {
+            for(tileDepth in tileDepthArray)
+            {
+                var tiles:Array<Tile> = [tileDepth.tile];
+
+                if(tileDepth.tile.parent != null && parentBlackList.indexOf(tileDepth.tile.parent) == -1)
+                {
+                    var tile:Tile = tileDepth.tile.parent;
+                    while(tile != null)
+                    {
+                        if(parentBlackList.indexOf(tile) != -1)
+                        {
+                            break;
+                        }
+                        parentBlackList.push(tile);
+                        tiles.insert(0, tile);
+                        if(tile.parent != null)
+                        {
+                            tile = cast tile.parent;
+                        }else{
+                            break;
+                        }
+                    }
+                }
+
+
+                var tempDepth:Int = tileDepth.depth - (tiles.length - 1);
+
+                for(tile in tiles)
+                {
+                    tempDepth++;
+                    var j = tempDepth + depth;
+                    while(j>0)
+                    {
+                        str += j==1?" ∟":" -";
+                        j--;
+                    }
+
+                    var n:String;
+
+                    if(Reflect.hasField(tile, "name"))
+                    {
+                        n = Reflect.field(tile, "name");
+                    }else if(Std.is(tile, Tile)){
+                        n = "Tile";
+                    }else if(Std.is(tile, TileContainer)){
+                        n = "TileContainer";
+                    }else{
+                        n = "?";
+                    }
+
+                    var ind:UInt;
+                    if(dolink && console.config.useObjectLinking) {
+                        ind = console.refs.setLogRef(tile);
+                        n = "<a href='event:cl_"+ind+"'>"+n+"</a> "+console.refs.makeRefTyped(tile);
+                    }
+                    else n = n+" ("+LogReferences.ShortClassName(tile)+")";
+
+                    str +=  "<p2><i>"+n+"</i></p2><br/>";
+                }
+            }
+        }
+
         return str;
     }
 
@@ -156,7 +256,6 @@ class RollerPanel extends ConsolePanel{
 
     private function onMenuRollOver(e:TextEvent):Void {
         var txt:String = e.text != null ? StringTools.replace(e.text, "event:", "") : "";
-        trace(txt);
         if(txt == "close"){
             txt = "Close";
         }else if(txt == "capture"){
@@ -176,7 +275,6 @@ class RollerPanel extends ConsolePanel{
 
     private function linkHandler(e:TextEvent):Void {
         cast(e.currentTarget, TextField).setSelection(0, 0);
-        trace(e.text);
         if(e.text == "close"){
             close();
         }else if(e.text == "capture"){

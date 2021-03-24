@@ -7,7 +7,7 @@ No special browser or player version is required.
 
 ### New features
 
-#### Coming Soon
+* Optional tilemap support has been added to Display Roller. *(It must be enabled from config)*
 
 ### Main features
 

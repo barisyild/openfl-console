@@ -77,8 +77,6 @@ class ConsoleTextField extends TextField {
 
         super.htmlText = htmlText;
 
-        trace(htmlText);
-
         #if !flash return htmlText; #end
     }
 
