@@ -323,7 +323,7 @@ class LogReferences extends ConsoleCore
                 menuStr += " [<a href='event:reffwd'>forward</a>]";
             }
             menuStr += "</b> || [<a href='event:ref_"+refIndex+"'>refresh</a>]";
-            menuStr += "</b> [<a href='event:refe_"+refIndex+"'>explode</a>]";
+            menuStr += " [<a href='event:refe_"+refIndex+"'>explode</a>]";
             if(config.commandLineAllowed){
                 menuStr += " [<a href='event:cl_"+refIndex+"'>scope</a>]";
             }
