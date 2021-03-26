@@ -404,7 +404,7 @@ class Executer extends EventDispatcher{
                 paramstr = ignoreWhite(paramstr);
                 var params:Array<Dynamic> = [];
                 if(paramstr != null){
-                    params = execValue(paramstr).value;
+                    params = cast execValue(paramstr).value;
                 }
 
                 //debug("params = "+params.length+" - ["+ params+"]");
@@ -438,7 +438,7 @@ class Executer extends EventDispatcher{
             }
             previndex = index+1;
             lastIndex = index+1;
-            result = FlashRegex.exec(str, reg, lastIndex);
+            result = cast FlashRegex.exec(str, reg, lastIndex);
             if(result != null)
             {
                 //v.base = v.value;
@@ -464,6 +464,7 @@ class Executer extends EventDispatcher{
 
         if(!haxe.rtti.Rtti.hasRtti(resolveClass))
         {
+            trace("rtti not found!");
             return null;
         }
 

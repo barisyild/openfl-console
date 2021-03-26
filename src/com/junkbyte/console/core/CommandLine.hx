@@ -56,7 +56,7 @@ class CommandLine extends ConsoleCore {
     public function new(m:Console) {
         super(m);
         _saved = new WeakObject();
-        _scope = m;
+        _scope = cast m;
         _slashCmds = new Map<String, SlashCommand>();
         _prevScope = new WeakRef(m);
         _saved.set("C", m);
@@ -148,7 +148,6 @@ class CommandLine extends ConsoleCore {
         if(config.commandLineAllowed){
             for (Y in _saved.keys()){
                 all.push(["$"+Y, LogReferences.ShortClassName(_saved.get(Y))]);
-                //TODO: fix hint corrupt glitch.
             }
             if(_scope){
                 all.push(["this", LogReferences.ShortClassName(_scope)]);

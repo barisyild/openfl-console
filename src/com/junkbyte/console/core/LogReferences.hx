@@ -25,7 +25,7 @@
 
 package com.junkbyte.console.core;
 
-import haxe.rtti.Meta;
+import openfl.display.Stage;
 import openfl.display.Tile;
 import com.junkbyte.console.utils.FlashRegex;
 import haxe.io.Bytes;
@@ -40,7 +40,6 @@ import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.utils.ByteArray;
-import openfl.utils.Dictionary;
 
 /**
  * @private
@@ -346,7 +345,8 @@ class LogReferences extends ConsoleCore
         // values
         // EVENTS .. metadata name="Event"
         //;
-        var self:String = "temp name";
+        var objClass:Class<Dynamic> = Type.getClass(obj);
+        var self:String = Type.getClassName(objClass);
         var isClass:Bool = Std.is(obj, Class);
         var st:String = isClass?"*":"";
         var str:String = "<b>{"+st+genLinkString(obj, null, EscHTML(self))+st+"}</b>";
@@ -374,10 +374,11 @@ class LogReferences extends ConsoleCore
         // extends...
         //
 
-        var fields = Executer.resolveAllFields(Type.getClass(obj));
+        var fields = Executer.resolveAllFields(objClass);
 
         if(fields == null)
         {
+            trace("fields null!");
             //describeType can be used for flash?
             return;
         }
@@ -511,6 +512,26 @@ class LogReferences extends ConsoleCore
             if(clen != 0){
                 report("<p10>Children:</p10> "+props.join("<p-1>; </p-1>")+"<br/>", 1, true, ch);
             }
+        }
+
+
+        if(Std.is(obj, Stage))
+        {
+            if(Std.is(obj, String)){
+                report("", 1, true, ch);
+                report("String", 10, true, ch);
+                report(EscHTML(obj), 1, true, ch);
+            }/*else if(obj is XML || obj is XMLList){
+                report("", 1, true, ch);
+                report("XMLString", 10, true, ch);
+                report(EscHTML(obj.toXMLString()), 1, true, ch);
+            }*/
+            //TODO: implement required
+            if(menuStr != null){
+                report("", 1, true, ch);
+                report(menuStr, -1, true, ch);
+            }
+            return;
         }
         //
         // constants...
@@ -790,11 +811,21 @@ class LogReferences extends ConsoleCore
      * e.g: openfl.display.Sprite => Sprite
      */
     public static function ShortClassName(obj:Dynamic, eschtml:Bool = true):String{
-        var str:String = openfl.Lib.getQualifiedClassName(obj);
+        var str:String;
+        if(Reflect.isFunction(obj))
+        {
+            str = "builtin.as$0::MethodClosure";
+        }else{
+            //getQualifiedClassName working little bit different in openfl.
+            //getQualifiedClassName does not return results to functions.
+            str = openfl.Lib.getQualifiedClassName(obj);
+        }
+
         var ind:Int = str.indexOf("::");
         var st:String = Std.is(obj, Class)?"*":"";
         str = st+str.substring(ind>=0?(ind+2):0)+st;
-        if(eschtml) return EscHTML(str);
+        if(eschtml)
+            return EscHTML(str);
         return str;
     }
 }
