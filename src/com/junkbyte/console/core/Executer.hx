@@ -24,6 +24,8 @@
 */
 package com.junkbyte.console.core;
 
+import haxe.rtti.CType.ClassField;
+import haxe.Json;
 import com.junkbyte.console.utils.FlashRegex;
 import Type.ValueType;
 import openfl.utils.Function;
@@ -116,22 +118,54 @@ class Executer extends EventDispatcher{
     }
 
     private function _exec(str:String):Void {
-        //TODO: recover code from original source
-        //TODO: implement required
+        //
+        // STRIP strings - '...', "...", '', "", while ignoring \' \" etc inside.
+        var strReg:EReg = new EReg("''|\"\"|('(.*?)[^\\\\]')|(\"(.*?)[^\\\\]\")", "");
+        var result = FlashRegex.exec(str, strReg);
+        while(result != null){
+            var match:String = result.elements[0];
+            var quote:String = match.charAt(0);
+            var start:Int = match.indexOf(quote);
+            var end:Int = match.lastIndexOf(quote);
+            var string:String = FlashRegex.replace(match.substring(start+1,end), ~/\\(.)/g, "$1");
+            //trace(VALUE_CONST+_values.length+" = "+string);
+            str = tempValue(str,new ExeValue(string), result.index+start, result.index+end+1);
+            //trace(str);
+            result = FlashRegex.exec(str, strReg);
+        }
+        //
+        // All strings will have replaced by #0, #1, etc
+        if(FlashRegex.search(str, new EReg('\'|\"', ''))>=0)
+        {
+            throw new Error('Bad syntax extra quotation marks');
+        }
+        //
+        // Run each line
+        var lineBreaks:Array<String> = FlashRegex.split(str, ~/\s*;\s*/);
+        for(line in lineBreaks){
+            if(line.length != 0){
+                var returned = Reflect.field(_saved, RETURNED);
+                if(returned != null && line == "/"){
+                    _scope = returned;
+                    dispatchEvent(new Event(Event.COMPLETE));
+                }else{
+                    execNest(line);
+                }
+            }
+        }
     }
     //
     // Nested strip
     // aaa.bbb(1/2,ccc(dd().ee)).ddd = fff+$g.hhh();
     //
-    private function execNest(line:String):Dynamic{
+    private function execNest(line:String):Dynamic {
         // exec values inside () - including functions and groups.
         line = ignoreWhite(line);
         var indOpen:Int = line.lastIndexOf("(");
         while(indOpen>=0){
             var firstClose:Int = line.indexOf(")", indOpen);
             //if there is params...
-            if(FlashRegex.search(line.substring(indOpen+1, firstClose), ~/\w/)>=0)
-            {
+            if(FlashRegex.search(line.substring(indOpen+1, firstClose), ~/\w/)>=0){
                 // increment closing if there r more opening inside
                 var indopen2:Int = indOpen;
                 var indClose:Int = indOpen+1;
@@ -145,42 +179,51 @@ class Executer extends EventDispatcher{
                 // must be a better way to see if its letter/digit or not :/
                 var isfun:Bool = false;
                 var fi:Int = indOpen-1;
-                while(true){
+                while(true)
+                {
                     var char:String = line.charAt(fi);
                     if(FlashRegex.match(char, ~/[^\s]/) || fi<=0) {
-                        if(FlashRegex.match(char, ~/\w/)) isfun = true;
+                        if(FlashRegex.match(char, ~/\w/))
+                            isfun = true;
                         break;
                     }
                     fi--;
                 }
                 if(isfun){
-                    var params:Array<String> = inside.split(",");
+                    var params:Array<Dynamic> = inside.split(",");
                     //trace("#"+_values.length+" stores function params ["+params+"]");
-                    line = tempValue(line,new ExeValue(params), indOpen+1, indClose);
-                    /*for(X in params){
-                        params[X] = execOperations(ignoreWhite(params[X])).value;
-                    }*/
-                    //TODO: implement required
-                }else{
-                    //var groupv:ExeValue = new ExeValue(groupv);
-                    //TODO: Check this weird code?
+                    line = tempValue(line, new ExeValue(params), indOpen+1, indClose);
+                    var tempArray = [];
 
+                    for(X in params){
+                        tempArray.push(execOperations(ignoreWhite(X)).value);
+                    }
+
+                    params.splice(0, params.length);
+
+                    for(value in tempArray)
+                    {
+                        params.push(value);
+                    }
+
+                }else{
                     var groupv:ExeValue = new ExeValue();
-                    line = tempValue(line,groupv, indOpen, indClose+1);
+                    //trace("#"+_values.length+" stores group value for "+inside);
+                    line = tempValue(line, groupv, indOpen, indClose+1);
                     groupv.setValue(execOperations(ignoreWhite(inside)).value);
                 }
-
-                //trace(line);
             }
             indOpen = line.lastIndexOf("(", indOpen-1);
         }
         _returned = execOperations(line).value;
-        if(_returned && autoScope){
-            var typ = Type.typeof(_returned);
-            //if(typ == ValueType.TObject || Std.is(_returned, XML))
+        if(_returned != null && autoScope){
+            /*var typ:String = typeof(_returned);
+            if(typ == "object" || typ=="xml")*/
             //TODO: implement required
+            var typ = Type.typeof(_returned);
             if(typ == ValueType.TObject)
             {
+                trace("setScope");
                 _scope = _returned;
             }
         }
@@ -188,9 +231,10 @@ class Executer extends EventDispatcher{
         return _returned;
     }
 
-    private function tempValue(str:String,v:Dynamic, indOpen:Int, indClose:Int):String{
+    private function tempValue(str:String, v:Dynamic, indOpen:Int, indClose:Int):String {
         //trace("tempValue", VALUE_CONST+_values.length, " = "+str);
         str = str.substring(0,indOpen)+VALKEY+_values.length+str.substring(indClose);
+
         _values.push(v);
         return str;
     }
@@ -199,66 +243,79 @@ class Executer extends EventDispatcher{
     // aaa.bbb.ccc(1/2,3).ddd += fff+$g.hhh();
     //
     private function execOperations(str:String):ExeValue {
-        //var reg:RegExp = /\s*(((\|\||\&\&|[+|\-|*|\/|\%|\||\&|\^]|\=\=?|\!\=|\>\>?\>?|\<\<?)\=?)|=|\~|\sis\s|typeof|delete\s)\s*/g;
-        /*var result:Dynamic = reg.exec(str);
-    var seq:Array<String> = [];
-    if(result == null){
-        seq.push(str);
-    }else{
-        var lastindex:Int = 0;
-        while(result != null) {
-            var index:Int = result.index;
-            var operation:String = result[0];
-            result = reg.exec(str);
-            if(result==null){
-                seq.push(str.substring(lastindex, index));
-                seq.push(ignoreWhite(operation));
-                seq.push(str.substring(index+operation.length));
-            }else{
-                seq.push(str.substring(lastindex, index));
-                seq.push(ignoreWhite(operation));
-                lastindex = index+operation.length;
+        trace("execOperations: " + str);
+        var reg:EReg = new EReg('\\s*(((\\|\\||\\&\\&|[+|\\-|*|\\/|\\%|\\||\\&|\\^]|\\=\\=?|\\!\\=|\\>\\>?\\>?|\\<\\<?)\\=?)|=|\\~|\\sis\\s|typeof|delete\\s)\\s*', 'g');
+        var result = FlashRegex.exec(str, reg);
+        var seq:Array<Dynamic> = [];
+        if(result == null){
+            seq.push(str);
+        }else{
+            var lastindex:Int = 0;
+            while(result != null) {
+                var index:Int = result.index;
+                var operation:String = result.elements[0];
+                trace("operation: " + operation);
+                trace("index: " + index);
+                result = FlashRegex.exec(str, reg, index);
+                if(result==null)
+                {
+                    seq.push(str.substring(lastindex, index));
+                    seq.push(ignoreWhite(operation));
+                    seq.push(str.substring(index+operation.length));
+                }else{
+                    seq.push(str.substring(lastindex, index));
+                    seq.push(ignoreWhite(operation));
+                    lastindex = index+operation.length;
+                }
             }
         }
-    }
         //trace("execOperations: "+seq);
         // EXEC values in sequence fisrt
-    var len:Int = seq.length;
-    for(var i:int = 0;i<len;i+=2){
-        seq[i] = execSimple(seq[i]);
-    }
-    var op:String;
-    var res:Dynamic;
-    var setter:RegExp = /((\|\||\&\&|[+|\-|*|\/|\%|\||\&|\^]|\>\>\>?|\<\<)\=)|=/;
+
+        var len:Int = seq.length;
+        var i:Int = 0;
+        while(i<len)
+        {
+            seq[i] = execSimple(seq[i]);
+            i+=2;
+        }
+        var op:String;
+        var res:Dynamic;
+        var setter:EReg = new EReg("((\\|\\||\\&\\&|[+|\\-|*|\\/|\\%|\\||\\&|\\^]|\\>\\>\\>?|\\<\\<)\\=)|=", "");
         // EXEC math operations
-    for(i = 1;i<len;i+=2){
-        op = seq[i];
-        if(FlashRegex.replace(op, setter,"")!="") {
-            res = operate(seq[i-1], op, seq[i+1]);
-            //debug("operate: "+seq[i-1].value, op, seq[i+1].value, "=", res);
-            var sv:ExeValue = ExeValue(seq[i-1]);
-            sv.setValue(res);
-            seq.splice(i,2);
-            i-=2;
-            len-=2;
+        var i:Int = 1;
+        while(i<len)
+        {
+            op = seq[i];
+            if(FlashRegex.replace(op, setter,"") != "") {
+                res = operate(seq[i-1], op, seq[i+1]);
+                //debug("operate: "+seq[i-1].value, op, seq[i+1].value, "=", res);
+                var sv:ExeValue = cast(seq[i-1], ExeValue);
+                sv.setValue(res);
+                seq.splice(i,2);
+                i-=2;
+                len-=2;
+            }
+            i+=2;
         }
-    }
         // EXEC setter operations after reversing the sequence
-    seq.reverse();
-    var v:ExeValue = seq[0];
-    for(i = 1;i<len;i+=2){
-        op = seq[i];
-        if(FlashRegex.replace(op, setter,"")==""){
-            v = seq[i-1];
-            var subject:ExeValue = seq[i+1];
-            if(op.length>1) op = op.substring(0,op.length-1);
-            res = operate(subject, op, v);
-            subject.setValue(res);
+        seq.reverse();
+        var v:ExeValue = seq[0];
+        var i:Int = 1;
+        while(i<len)
+        {
+            op = seq[i];
+            if(FlashRegex.replace(op, setter,"")==""){
+                v = seq[i-1];
+                var subject:ExeValue = seq[i+1];
+                if(op.length>1)
+                    op = op.substring(0,op.length-1);
+                res = operate(subject, op, v);
+                subject.setValue(res);
+            }
+            i+=2;
         }
-    }
-    return v;*/
-        //TODO: implement required
-        return null;
+        return v;
     }
     //
     // Simple strip
@@ -266,6 +323,8 @@ class Executer extends EventDispatcher{
     // includes class path detection and 'new' operation
     //
     private function execSimple(str:String):ExeValue{
+        trace("execSimple: " + str);
+
         var v:ExeValue = new ExeValue(_scope);
         //debug('execStrip: '+str);
         //
@@ -282,10 +341,9 @@ class Executer extends EventDispatcher{
         //
         //
         var reg:EReg = ~/\.|\(/g;
-        //var result:Dynamic = reg.exec(str);
-        //TODO: implement required
-        var result:Dynamic = null;
-        if(result==null || Std.parseFloat(str) == Math.NaN){
+        var result:Dynamic = FlashRegex.exec(str, reg);
+        if(result == null || !Math.isNaN(Std.parseFloat(str))){
+            trace("execValue");
             return execValue(str, _scope);
         }
         //
@@ -296,19 +354,27 @@ class Executer extends EventDispatcher{
                 var classstr:String = firstparts.join(".");
                 try{
                     var def:Dynamic = openfl.Lib.getDefinitionByName(ignoreWhite(classstr));
-                    var havemore:Bool = str.length>classstr.length;
+
+                    if(def == null)
+                    {
+                        throw "";
+                    }
+
+                    //trace("classstr: " + classstr);
+                    //trace("ignoreWhite(classstr): " + ignoreWhite(classstr));
+                    var havemore:Bool = str.length > classstr.length;
                     //trace(classstr+" is a definition:", def);
+                    //trace("before tempValue: " + str);
                     str = tempValue(str, new ExeValue(def), 0, classstr.length);
+                    //trace("after tempValue: " + str);
                     //trace(str);
                     if(havemore){
-                        /*reg.lastIndex = 0;
-                        result = reg.exec(str);*/
-                        //TODO: implement required
+                        result = cast FlashRegex.exec(str, reg, 0);
                     }else{
                         return execValue(str);
                     }
                     break;
-                }catch(e:Error){
+                }catch(e){
                     firstparts.pop();
                 }
             }
@@ -316,16 +382,23 @@ class Executer extends EventDispatcher{
         //
         // dot syntex and simple function steps
         var previndex:Int = 0;
-        //trace("str = "+str);
-        while(result != null){
+        var lastIndex:Int = 0;
+        var index:Int = result.index;
+        while(result != null)
+        {
             var index:Int = result.index;
             var isFun:Bool = str.charAt(index)=="(";
+            trace("isFun: " + isFun);
             var basestr:String = ignoreWhite(str.substring(previndex, index));
             //trace("_scopestr = "+basestr+ " v.base = "+v.value);
             var newv:ExeValue = previndex==0?execValue(basestr, v.value):new ExeValue(v.value, basestr);
             //trace("_scope = "+newv.value+"  isFun:"+isFun);
-            if(isFun){
+            if(isFun)
+            {
                 var newbase:Dynamic = newv.value;
+                trace("newbase: " + newbase);
+                trace("newbase string: " + str);
+
                 var closeindex:Int = str.indexOf(")", index);
                 var paramstr:String = str.substring(index+1, closeindex);
                 paramstr = ignoreWhite(paramstr);
@@ -333,14 +406,15 @@ class Executer extends EventDispatcher{
                 if(paramstr != null){
                     params = execValue(paramstr).value;
                 }
+
                 //debug("params = "+params.length+" - ["+ params+"]");
                 // this is because methods in stuff like XML/XMLList got AS3 namespace.
-                if(Type.typeof(newbase) != ValueType.TObject){
+                if(!(Reflect.isFunction(newbase)))
+                {
                     /*try{
                         var nss:Array<Namespace> = [AS3];
                         for(ns in nss){
                             var nsv:Dynamic = v.obj.ns::[basestr];
-                            var nsv:Dynamic = null;
                             if(Std.is(nsv, Function)){
                                 newbase = nsv;
                                 break;
@@ -350,7 +424,7 @@ class Executer extends EventDispatcher{
                         // Will throw below...
                     }*/
                     //TODO: implement required
-                    if(Type.typeof(newbase) != ValueType.TFunction) {
+                    if(!(Reflect.isFunction(newbase))) {
                         throw new Error(basestr+" is not a function.");
                     }
                 }
@@ -363,25 +437,225 @@ class Executer extends EventDispatcher{
                 v = newv;
             }
             previndex = index+1;
-            //reg.lastIndex = index+1;
-            //TODO: implement required
-            //result = reg.exec(str);
-            //TODO: implement required
-            if(result != null){
+            lastIndex = index+1;
+            result = FlashRegex.exec(str, reg, lastIndex);
+            if(result != null)
+            {
                 //v.base = v.value;
             }else if(index+1 < str.length){
                 //v.base = v.value;
-                //reg.lastIndex = str.length;
-                //TODO: implement required
+                lastIndex = str.length;
                 result = {index:str.length};
             }
         }
+
         return v;
     }
+
+    public static function resolveAllFields(resolveClass:Class<Dynamic>):Dynamic
+    {
+        var items:Dynamic = {};
+        items.staticVariables = new Array<Dynamic>();
+        items.staticFunctions = new Array<Dynamic>();
+        items.variables = new Array<Dynamic>();
+        items.functions = new Array<Dynamic>();
+        items.superClasses = new Array<String>();
+
+
+        if(!haxe.rtti.Rtti.hasRtti(resolveClass))
+        {
+            return null;
+        }
+
+        var rtti = haxe.rtti.Rtti.getRtti(resolveClass);
+
+        while(rtti != null && haxe.rtti.Rtti.hasRtti(resolveClass))
+        {
+            for(fieldType in [rtti.statics, rtti.fields])
+            {
+                var fields:Array<Dynamic> = cast fieldType;
+                for(field in fields)
+                {
+                    if(field.name == "new")
+                        continue;
+                    var item:Dynamic = {};
+                    var isFunction:Bool = Reflect.hasField(field.type, "args");
+                    var isStatic:Bool = fields == rtti.statics;
+                    var type:String = "Dynamic";
+
+                    item.name = field.name;
+                    item.isFunction = isFunction;
+                    item.isPublic = field.isPublic;
+                    item.isFinal = field.isFinal;
+                    item.isOverride = field.isOverride;
+                    item.isStatic = isStatic;
+
+                    if(isFunction)
+                    {
+                        var variables:Map<String, {
+                            type:String,
+                            optional:Bool,
+                            value:Dynamic
+                        }> = new Map();
+                        var name:String = "";
+                        var type:String = "Dynamic";
+                        var args:Array<Dynamic> = cast field.type.args;
+                        for(i in 0...args.length)
+                        {
+                            var arg:Dynamic = args[i];
+
+                            //trace("args: " + arg);
+                            var variableType:String = "";
+                            if(arg.name != null)
+                            {
+                                var params:Array<Dynamic> = null;
+                                name = arg.name;
+
+                                if(arg.t.params != null)
+                                {
+                                    params = arg.t.params;
+                                    variableType = arg.t.name;
+                                }
+
+                                if(arg.params != null)
+                                {
+                                    params = arg.params;
+                                }
+
+                                if(params != null && params.length > 0)
+                                {
+                                    variableType += "<";
+                                    for(i in 0...params.length)
+                                    {
+                                        var paramType:String = params[i].name;
+                                        if(paramType == null)
+                                        {
+                                            paramType = "Dynamic";
+                                        }
+                                        if(i == 0)
+                                        {
+                                            variableType += paramType;
+                                        }else{
+                                            variableType += ", " + paramType;
+                                        }
+                                    }
+                                    variableType += ">";
+                                }
+                            }
+
+                            variables.set(name, {
+                                type: variableType,
+                                optional: arg.opt,
+                                value: arg.value != null ? arg.value : null
+                            });
+
+                            if(field.type.ret.name != null)
+                            {
+                                type = field.type.ret.name;
+                                var params:Array<Dynamic> = field.type.ret.params;
+                                if(params != null && params.length > 0)
+                                {
+
+                                    type += "<";
+                                    for(i in 0...params.length)
+                                    {
+                                        var param = params[i];
+                                        var variableType:String = param.name;
+                                        if(variableType == null)
+                                        {
+                                            variableType = "Dynamic";
+                                        }
+                                        if(i == 0)
+                                        {
+                                            type += variableType;
+                                        }else{
+                                            type += ", " + variableType;
+                                        }
+                                    }
+                                    type += ">";
+                                }
+                            }
+                        }
+
+                        item.variables = variables;
+                    }else{
+                        if(Reflect.hasField(field.type, "name"))
+                        {
+                            type = field.type.name; //Map
+                        }
+
+
+                        var params:Array<Dynamic> = field.type.params;
+                        if(params != null && params.length > 0)
+                        {
+                            type += "<";
+                            for(i in 0...field.type.params.length)
+                            {
+                                var param:Dynamic = field.type.params[i];
+                                var variableType:String = param.name;
+                                if(variableType == null)
+                                {
+                                    variableType = "Dynamic";
+                                }
+                                if(i == 0)
+                                {
+                                    type += variableType;
+                                }else{
+                                    type += ", " + variableType;
+                                }
+                            }
+                            type += ">";
+                        }
+                    }
+
+                    item.type = type;
+
+                    if(isFunction)
+                    {
+                        if(isStatic)
+                        {
+                            items.staticFunctions.push(item);
+
+                        }else{
+                            items.functions.push(item);
+                        }
+                    }else{
+                        if(isStatic)
+                        {
+                            items.staticVariables.push(item);
+                        }else{
+                            items.variables.push(item);
+                        }
+                    }
+                }
+            }
+
+            if(rtti.superClass != null)
+            {
+                resolveClass = Type.resolveClass(rtti.superClass.path);
+                if(resolveClass != null && haxe.rtti.Rtti.hasRtti(resolveClass))
+                {
+                    items.superClasses.push(rtti.superClass.path);
+                    rtti = haxe.rtti.Rtti.getRtti(resolveClass);
+                }else{
+                    rtti = null;
+                }
+
+            }else{
+                rtti = null;
+            }
+        }
+
+
+        return items;
+    }
+
     //
     // single values such as string, int, null, $a, ^1 and Classes without package.
     //
     private function execValue(str:String, base:Dynamic = null):ExeValue{
+        trace("execValueString: " + str);
+        trace("execValueBase: " + base);
         var v:ExeValue = new ExeValue();
         if (str == "true") {
             v.obj = cast true;
@@ -391,12 +665,11 @@ class Executer extends EventDispatcher{
             v.obj = _scope;
         }else if (str == "null") {
             v.obj = null;
-        }else if (Std.parseFloat(str) != Math.NaN) {
+        }else if (!Math.isNaN(Std.parseFloat(str))) {
             v.obj = cast Std.parseFloat(str);
         }else if(str.indexOf(VALKEY)==0){
-            /*var vv:ExeValue = _values[str.substring(VALKEY.length)];
-            v.obj = vv.value;*/
-            //TODO: implement required
+            var vv:ExeValue = _values[Std.parseInt(str.substring(VALKEY.length))];
+            v.obj = vv.value;
         }else if(str.charAt(0) == "$"){
             var key:String = str.substring(1);
             if(_reserved.indexOf(key)<0){
@@ -409,13 +682,18 @@ class Executer extends EventDispatcher{
             }
         }else{
             try{
-                v.obj = openfl.Lib.getDefinitionByName(str);
-            }catch(e:Error){
+                v.obj = cast openfl.Lib.getDefinitionByName(str);
+                if(v.obj == null)
+                {
+                    throw "";
+                }
+            }catch(e){
                 v.obj = base;
                 v.prop = str;
             }
         }
         //debug("value: "+str+" = "+openfl.Lib.getQualifiedClassName(v.value)+" - "+v.value+" base:"+v.base);
+        trace("v: " + v);
         return v;
     }
     // * typed cause it could be String +  OR comparison such as || or &&
@@ -481,21 +759,21 @@ class Executer extends EventDispatcher{
     //
     // make new instance
     //
-    private function makeNew(str:String):Dynamic{
+    private function makeNew(str:String):Dynamic {
         //debug("makeNew "+str);
         var openindex:Int = str.indexOf("(");
         var defstr:String = openindex>0?str.substring(0, openindex):str;
         defstr = ignoreWhite(defstr);
-        var def:Dynamic = execValue(defstr).value;
+        var def = execValue(defstr).value;
         if(openindex>0){
-            var closeindex:Int = str.indexOf(")", openindex);
-            var paramstr:String = str.substring(openindex+1, closeindex);
-            paramstr = ignoreWhite(paramstr);
-            var p:Array<Dynamic> = [];
-            if(paramstr != null){
-                p = cast execValue(paramstr).value;
-            }
-            var len:Int = p.length;
+        var closeindex:Int = str.indexOf(")", openindex);
+        var paramstr:String = str.substring(openindex+1, closeindex);
+        paramstr = ignoreWhite(paramstr);
+        var p:Array<Dynamic> = [];
+        if(paramstr != null && paramstr != "") {
+            p = execValue(paramstr).value;
+        }
+        var len:Int = p.length;
             //
             // HELP! how do you construct an object with unknown number of arguments?
             // calling a function with multiple arguments can be done by fun.apply()... but can't for constructor :(

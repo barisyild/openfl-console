@@ -23,6 +23,7 @@
 * 
 */
 package com.junkbyte.console.addons.htmlexport;
+import com.junkbyte.console.utils.FlashRegex;
 import openfl.errors.Error;
 import openfl.xml.XML;
 import com.junkbyte.console.Console;
@@ -36,8 +37,7 @@ import openfl.utils.describeType;
 	 */
 class ConsoleHTMLRefsGen
 {
-    //private static const refSearchExpression:RegExp = /<a(\s+)href=\'event:ref_(\d+)\'>/g;
-    //TODO: implement required
+    private static inline var refSearchExpression:EReg = ~/<a(\s+)href=\'event:ref_(\d+)\'>/g;
 
     private var console:Console;
     private var referencesDepth:UInt;
@@ -65,15 +65,13 @@ class ConsoleHTMLRefsGen
 
     private function processRefIdsFromLine(line:String, currentDepth:UInt = 0):Void
     {
-        /*refSearchExpression.lastIndex = 0;
-        var result:Object = refSearchExpression.exec(line);
+        var result = FlashRegex.exec(line, refSearchExpression);
         while(result != null)
         {
-            var id:UInt = Std.parseInt(result[2]);
+            var id:UInt = Std.parseInt(result.elements[2]);
             processRefId(id, currentDepth);
-            result = refSearchExpression.exec(line);
-        }*/
-        //TODO: implement required
+            result = FlashRegex.exec(line, refSearchExpression);
+        }
     }
 
     private function processRefId(id:UInt, currentDepth:UInt):Void

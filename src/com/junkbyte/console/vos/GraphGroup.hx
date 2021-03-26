@@ -53,8 +53,8 @@ class GraphGroup {
     }
 
     public function updateMinMax(v:Float):Void {
-        if(v != Math.NaN && !fixed){
-            if(low == Math.NaN) {
+        if(!Math.isNaN(v) && !fixed){
+            if(Math.isNaN(low)) {
                 low = v;
                 hi = v;
             }

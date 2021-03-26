@@ -70,7 +70,7 @@ class Graphing extends ConsoleCore {
             group = new GraphGroup(n);
         }
         var interests:Array<GraphInterest> = group.interests;
-        if (col == Math.NaN || col < 0) {
+        if (Math.isNaN(col) || col < 0) {
             if (interests.length <= 5) col = Reflect.field(config.style, "priority"+ (10-interests.length*2));
             else col = Std.int(Math.random()*0xFFFFFF);
         }
@@ -91,7 +91,7 @@ class Graphing extends ConsoleCore {
             report("Error with graph value for ["+key+"] in ["+n+"]. "+e, 10);
             return;
         }
-        if(v == Math.NaN){
+        if(Math.isNaN(v)){
             report("Graph value for key ["+key+"] in ["+n+"] is not a number (NaN).", 10);
         }else{
             group.interests.push(interest);
@@ -118,7 +118,7 @@ class Graphing extends ConsoleCore {
         if(group == null) return;
         group.low = low;
         group.hi = high;
-        group.fixed = !(low == Math.NaN || high == Math.NaN);
+        group.fixed = !(Math.isNaN(low) || Math.isNaN(high));
     }
 
     public function remove(n:String, obj:Dynamic = null, prop:String = null):Void {

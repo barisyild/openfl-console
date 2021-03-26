@@ -246,7 +246,7 @@ class GraphingPanel extends ConsolePanel {
                     }
                     graph.graphics.lineTo((W-i), Y);
                 }
-                if(_interest.avg == Math.NaN && diffGraph != 0){
+                if(Math.isNaN(_interest.avg) && diffGraph != 0){
                     Y = ((_interest.avg-lowest)/diffGraph)*H;
                     if(!group.inv) Y = H-Y;
                     if(Y<0)Y=0;
@@ -276,7 +276,7 @@ class GraphingPanel extends ConsolePanel {
     public function updateKeyText():Void{
         var str:String = "<r><low>";
         if(_type != null){
-            if(_interest.v == Math.NaN){
+            if(Math.isNaN(_interest.v)){
                 str += "no input";
             }else if(_type == FPS){
                 //str += _interest.avg.toFixed(1);

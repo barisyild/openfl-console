@@ -122,7 +122,7 @@ class KeyBinder extends ConsoleCore {
 
     private function tryRunKey(key:String):Void
     {
-        /*var a:Array<Function> = _binds[key];
+        var a:Array<Dynamic> = _binds[key];
         if(config.keyBindsEnabled && a != null){
             if(canTrigger()){
                 Reflect.callMethod(null, a[0], a[1]);
@@ -130,8 +130,7 @@ class KeyBinder extends ConsoleCore {
                 _warns++;
                 report("Key bind [" + key + "] did not trigger because you have focus on an input TextField.", 8);
             }
-        }*/
-        //TODO: implement required
+        }
     }
 
     private function canTrigger():Bool {

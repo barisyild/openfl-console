@@ -139,8 +139,8 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function log(strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function log(strings:Array<Dynamic>):Void{
         //_console.log.apply(null, strings);
         //TODO: implement required
         if(_console != null) _console.log(strings);
@@ -151,8 +151,8 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function info(strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function info(strings:Array<Dynamic>):Void{
         //_console.info.apply(null, strings);
         //TODO: implement required
         if(_console != null) _console.info(strings);
@@ -163,8 +163,8 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function debug(strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function debug(strings:Array<Dynamic>):Void{
         //_console.debug.apply(null, strings);
         //TODO: implement required
         if(_console != null) _console.debug(strings);
@@ -175,8 +175,8 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function warn(strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function warn(strings:Array<Dynamic>):Void{
         //_console.warn.apply(null, strings);
         //TODO: implement required
         if(_console != null) _console.warn(strings);
@@ -187,8 +187,8 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function error(strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function error(strings:Array<Dynamic>):Void{
         //_console.error.apply(null, strings);
         //TODO: implement required
         if(_console != null) _console.error(strings);
@@ -199,8 +199,8 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function fatal(strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function fatal(strings:Array<Dynamic>):Void{
         //_console.fatal.apply(null, strings);
         //TODO: implement required
         if(_console != null) _console.fatal(strings);
@@ -212,8 +212,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function logch(channel:Dynamic, strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function logch(channel:Dynamic, strings:Array<Dynamic>):Void{
         if(_console != null) _console.addCh(channel, strings, Console.LOG);
     }
     /**
@@ -223,8 +223,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function infoch(channel:Dynamic, strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function infoch(channel:Dynamic, strings:Array<Dynamic>):Void{
         if(_console != null) _console.addCh(channel, strings, Console.INFO);
     }
     /**
@@ -234,8 +234,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function debugch(channel:Dynamic, strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function debugch(channel:Dynamic, strings:Array<Dynamic>):Void{
         if(_console != null) _console.addCh(channel, strings, Console.DEBUG);
     }
     /**
@@ -245,8 +245,8 @@ class Cc{
      * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
      * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function warnch(channel:Dynamic, strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function warnch(channel:Dynamic, strings:Array<Dynamic>):Void{
         if(_console != null) _console.addCh(channel, strings, Console.WARN);
     }
     /**
@@ -256,8 +256,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function errorch(channel:Dynamic, strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function errorch(channel:Dynamic, strings:Array<Dynamic>):Void{
         if(_console != null) _console.addCh(channel, strings, Console.ERROR);
     }
     /**
@@ -267,8 +267,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function fatalch(channel:Dynamic, strings:Array<String>):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public static function fatalch(channel:Dynamic, strings:Array<Dynamic>):Void{
         if(_console != null) _console.addCh(channel, strings, Console.FATAL);
     }
     /**

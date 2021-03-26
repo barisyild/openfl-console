@@ -46,9 +46,11 @@ class WeakRef{
         if(_strong){
             return _val;
         }else{
-            for(X in Reflect.fields(_val)){
+            /*for(X in Reflect.fields()){
                 return X;
-            }
+            }*/
+            //TODO: implement required
+            return _val;
         }
         return null;
     }
@@ -57,8 +59,10 @@ class WeakRef{
         if(_strong){
             _val = ref;
         }else{
-            _val = {};
-            Reflect.setField(_val, ref, null);
+            /*_val = {};
+            Reflect.setField(_val, ref, null);*/
+            //TODO: implement required
+            _val = ref;
         }
         return ref;
     }

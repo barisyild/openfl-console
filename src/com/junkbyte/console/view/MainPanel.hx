@@ -235,6 +235,7 @@ class MainPanel extends ConsolePanel {
         addEventListener(TextEvent.LINK, linkHandler, false, 0, true);
         #else
         txtField.addEventListener(TextEvent.LINK, linkHandler, false, 0, true);
+        _traceField.addEventListener(TextEvent.LINK, linkHandler, false, 0, true);
         #end
 
         addEventListener(Event.ADDED_TO_STAGE, stageAddedHandle, false, 0, true);
@@ -627,23 +628,25 @@ class MainPanel extends ConsolePanel {
     }
 
     private function addFilterText(txt:String):String{
+        var lastIndex:Int = 0;
         if(_filterRegExp != null){
             // need to look into every match to make sure there no half way HTML tags and not inside the HTML tags it self in the match.
-            /*_filterRegExp.lastIndex = 0;
-            var result:Dynamic = _filterRegExp.exec(txt);
-            while (result != null) {
+            lastIndex = 0;
+            var result = FlashRegex.exec(txt, _filterRegExp, lastIndex);
+            while (result != null)
+            {
                 var i:Int = result.index;
-                var match:String = result[0];
-                if(FlashRegex.search(match, "<|>")>=0)
+                var match:String = result.elements[0];
+                if(FlashRegex.search(match, new EReg("<|>", ""))>=0)
                 {
-                    _filterRegExp.lastIndex -= FlashRegex.search(match.length-match, "<|>");
+                    lastIndex -= match.length-FlashRegex.search(match, new EReg("<|>", ""));
                 }else if(txt.lastIndexOf("<", i)<=txt.lastIndexOf(">", i)){
                     txt = txt.substring(0, i)+"<u>"+txt.substring(i, i+match.length)+"</u>"+txt.substring(i+match.length);
-                    _filterRegExp.lastIndex+=7; // need to add to satisfy the fact that we added <u> and </u>
+                    lastIndex += 7; // need to add to satisfy the fact that we added <u> and </u>
                 }
-                result = _filterRegExp.exec(txt);
-            }*/
-            //TODO: implement required
+                result = FlashRegex.exec(txt, _filterRegExp, lastIndex);
+            }
+
         }else if(_filterText != null){
             // could have been simple if txt.replace replaces every match.
             var lowercase:String = txt.toLowerCase();

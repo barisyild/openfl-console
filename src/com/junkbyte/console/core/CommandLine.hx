@@ -148,10 +148,14 @@ class CommandLine extends ConsoleCore {
         if(config.commandLineAllowed){
             for (Y in _saved.keys()){
                 all.push(["$"+Y, LogReferences.ShortClassName(_saved.get(Y))]);
+                //TODO: fix hint corrupt glitch.
             }
             if(_scope){
                 all.push(["this", LogReferences.ShortClassName(_scope)]);
-                all.concat(console.refs.getPossibleCalls(_scope));
+                for(possibleCalls in console.refs.getPossibleCalls(_scope))
+                {
+                    all.push(possibleCalls);
+                }
             }
         }
         str = str.toLowerCase();
@@ -172,6 +176,8 @@ class CommandLine extends ConsoleCore {
             hints.splice(max, hints.length);
             hints.push(["..."]);
         }
+
+        trace(hints);
         return hints;
     }
 
@@ -324,6 +330,8 @@ class CommandLine extends ConsoleCore {
                     _scopeStr = LogReferences.ShortClassName(_scope, false);
                     sendCmdScope2Remote();
                 }
+                trace(returned);
+                trace(console.refs.makeRefTyped(returned));
                 report("Changed to "+console.refs.makeRefTyped(returned), -1);
             }else{
                 if(say) report("Returned "+console.refs.makeString(returned), -1);
@@ -341,10 +349,7 @@ class CommandLine extends ConsoleCore {
 
     private function reportError(e:Error):Void {
         var str:String = console.refs.makeString(e);
-        //var lines:Array<String> = str.split(/\n\s*/);
-        //TODO: implement required
-
-        var lines:Array<String> = [];
+        var lines:Array<String> = FlashRegex.split(str, ~/\n\s*/);
         var p:Int = 10;
         var internalerrs:Int = 0;
         var len:Int = lines.length;

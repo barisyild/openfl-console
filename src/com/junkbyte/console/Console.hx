@@ -24,6 +24,7 @@
 */
 package com.junkbyte.console;
 
+import com.junkbyte.console.utils.FlashRegex;
 import com.junkbyte.console.vos.GraphGroup;
 import openfl.utils.Function;
 import openfl.errors.Error;
@@ -121,10 +122,7 @@ class Console extends Sprite {
         _kb = new KeyBinder(this);
 
         cl.addCLCmd("remotingSocket", function(str:String = ""):Void {
-            //var args:Array = str.split(/\s+|\:/);
-            //TODO: implement required
-
-            var args:Array<String> = [];
+            var args:Array<String> = FlashRegex.split(str, ~/\s+|\\:/);
             remotingSocket(args[0], Std.parseInt(args[1]));
         }, "Connect to socket remote. /remotingSocket ip port");
 
@@ -543,11 +541,12 @@ class Console extends Sprite {
     }
 
     public function report(obj:Dynamic, priority:Int = 0, skipSafe:Bool = true, channel:String = null):Void {
-        if(channel == null) channel = _panels.mainPanel.reportChannel;
+        if(channel == null)
+            channel = _panels.mainPanel.reportChannel;
         addLine([obj], priority, channel, false, skipSafe, 0);
     }
 
-    public function addLine(strings:Array<String>, priority:Int = 0, channel:Dynamic = null,isRepeating:Bool = false, html:Bool = false, stacks:Int = -1):Void {
+    public function addLine(strings:Array<Dynamic>, priority:Int = 0, channel:Dynamic = null,isRepeating:Bool = false, html:Bool = false, stacks:Int = -1):Void {
         var txt:String = "";
         var len:Int = strings.length;
         for(i in 0...len){
@@ -612,48 +611,48 @@ class Console extends Sprite {
     /**
      * @copy com.junkbyte.console.Cc#log()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function log(strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function log(strings:Array<Dynamic>):Void {
         addLine(strings, LOG);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#info()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function info(strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function info(strings:Array<Dynamic>):Void {
         addLine(strings, INFO);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#debug()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function debug(strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function debug(strings:Array<Dynamic>):Void {
         addLine(strings, DEBUG);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#warn()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function warn(strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function warn(strings:Array<Dynamic>):Void {
         addLine(strings, WARN);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#error()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function error(strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function error(strings:Array<Dynamic>):Void {
         addLine(strings, ERROR);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#fatal()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function fatal(strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function fatal(strings:Array<Dynamic>):Void {
         addLine(strings, FATAL);
     }
 
@@ -667,55 +666,56 @@ class Console extends Sprite {
     /**
 		 * @copy com.junkbyte.console.Cc#logch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function logch(channel:Dynamic, strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function logch(channel:Dynamic, strings:Array<Dynamic>):Void {
         addLine(strings, LOG, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#infoch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function infoch(channel:Dynamic, strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function infoch(channel:Dynamic, strings:Array<Dynamic>):Void {
         addLine(strings, INFO, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#debugch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function debugch(channel:Dynamic, strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function debugch(channel:Dynamic, strings:Array<Dynamic>):Void {
         addLine(strings, DEBUG, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#warnch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function warnch(channel:Dynamic, strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function warnch(channel:Dynamic, strings:Array<Dynamic>):Void {
         addLine(strings, WARN, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#errorch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function errorch(channel:Dynamic, strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function errorch(channel:Dynamic, strings:Array<Dynamic>):Void {
         addLine(strings, ERROR, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#fatalch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function fatalch(channel:Dynamic, strings:Array<String>):Void {
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function fatalch(channel:Dynamic, strings:Array<Dynamic>):Void {
         addLine(strings, FATAL, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#addCh()
 		 */
-    public function addCh(channel:Dynamic, strings:Array<String>, priority:Int = 2, isRepeating:Bool = false):Void{
+    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
+    public function addCh(channel:Dynamic, strings:Array<Dynamic>, priority:Int = 2, isRepeating:Bool = false):Void{
         addLine(strings, priority, channel, isRepeating);
     }
 

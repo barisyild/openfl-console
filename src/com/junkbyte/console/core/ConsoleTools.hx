@@ -114,10 +114,58 @@ class ConsoleTools extends ConsoleCore{
     }
 
 
-    public function explode(obj:Dynamic, depth:Int = 3, p:Int = 9):String {
-        //TODO: source code is completely incompatible.
-        //TODO: Fix this issue!
-        return "implement required";
+    public function explode(obj:Dynamic, depth:Int = 3, p:Int = 9):String{
+        var t = Type.typeof(obj);
+        if(obj == null){
+            // could be null, undefined, NaN, 0, etc. all should be printed as is
+            return "<p-2>"+obj+"</p-2>";
+        }else if(Std.is(obj, String)){
+            return '"'+LogReferences.EscHTML(cast(obj, String))+'"';
+        //}else if(t != ValueType.TObject || depth == 0 || Std.is(obj, ByteArray))
+        //TODO: implement required
+        }else if(t != ValueType.TObject || depth == 0)
+        {
+            return console.refs.makeString(obj);
+        }
+        if(p<0) p = 0;
+
+        var list:Array<String> = [];
+
+        list.push(stepExp(obj, "data", depth, p));
+
+        /*var V:XML = describeType(obj);
+        var nodes:XMLList, n:String;
+            //
+        nodes = V["accessor"];
+        for (accessorX in nodes) {
+            n = accessorX.@name;
+            if(accessorX.@access!="writeonly"){
+                try{
+                    list.push(stepExp(obj, n, depth, p));
+                }catch(e:Error)
+                {
+
+                }
+            }else{
+                list.push(n);
+            }
+        }
+        nodes = V["variable"];
+        for (variableX in nodes) {
+            n = variableX.@name;
+            list.push(stepExp(obj, n, depth, p));
+        }
+            //
+        try
+        {
+            for (var X:String in obj) {
+                list.push(stepExp(obj, X, depth, p));
+            }
+        }catch(e:Error){
+
+        }*/
+        //TODO: implement required
+        return "<p"+p+">{"+LogReferences.ShortClassName(obj)+"</p"+p+"> "+list.join(", ")+"<p"+p+">}</p"+p+">";
     }
 
     private function stepExp(o:Dynamic, n:String, d:Int, p:Int):String {
@@ -131,10 +179,7 @@ class ConsoleTools extends ConsoleCore{
         var str:String = null;
         if(str == null) return "";
         var txt:String = "";
-        //var lines:Array<String> = str.split(/\n\sat\s/);
-        //TODO: implement required
-
-        var lines:Array<String> = [];
+        var lines:Array<String> = FlashRegex.split(str, ~/\n\sat\s/);
         var len:Int = lines.length;
         var reg:EReg = new EReg("Function|" + openfl.Lib.getQualifiedClassName(Console) + "|" + openfl.Lib.getQualifiedClassName(Cc), "");
         //TODO: Check if Regex is working.

@@ -79,7 +79,7 @@ class GraphInterest {
         v = val;
         if(averaging>0)
         {
-            if(avg == Math.NaN)
+            if(Math.isNaN(avg))
             {
                 avg = v;
             }

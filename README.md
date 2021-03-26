@@ -38,7 +38,7 @@ No special browser or player version is required.
 
 ### Completion Status
 
-* %10
+* %60
 
 Pull requests are welcome
 
@@ -54,4 +54,5 @@ haxelib git openfl-console https://github.com/barisyild/openfl-console.git
 
 ```
 <haxelib name="openfl-console"/>
+<haxeflag name="--macro" value="addGlobalMetadata('', '@:rtti')" if="debug"/>
 ```

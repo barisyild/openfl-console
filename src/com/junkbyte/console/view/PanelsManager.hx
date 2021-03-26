@@ -143,7 +143,7 @@ class PanelsManager {
                     var rect:Rectangle = group.rect;
                     if(rect == null) rect = new Rectangle(Math.NaN,Math.NaN, 0, 0);
                     var size:Int = 100;
-                    if(rect.x == Math.NaN || rect.y == Math.NaN){
+                    if(Math.isNaN(rect.x) || Math.isNaN(rect.y)){
                         if(_mainPanel.width < 150){
                             size = 50;
                         }
@@ -155,8 +155,8 @@ class PanelsManager {
                         rect.y = _mainPanel.y+(size*0.6)+(iy*size);
                         _graphPlaced++;
                     }
-                    if(rect.width<=0 || rect.width == Math.NaN)  rect.width = size;
-                    if(rect.height<=0 || rect.height == Math.NaN) rect.height = size;
+                    if(rect.width<=0 || Math.isNaN(rect.width))  rect.width = size;
+                    if(rect.height<=0 || Math.isNaN(rect.height)) rect.height = size;
                     panel = new GraphingPanel(console, rect.width,rect.height);
                     panel.x = rect.x;
                     panel.y = rect.y;
