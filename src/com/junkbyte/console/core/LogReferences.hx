@@ -345,9 +345,16 @@ class LogReferences extends ConsoleCore
         // values
         // EVENTS .. metadata name="Event"
         //;
-        var objClass:Class<Dynamic> = Type.getClass(obj);
-        var self:String = Type.getClassName(objClass);
         var isClass:Bool = Std.is(obj, Class);
+        var objClass:Class<Dynamic> = null;
+        if(isClass)
+        {
+            objClass = cast obj;
+        }else{
+            objClass = Type.getClass(obj);
+        }
+
+        var self:String = Type.getClassName(objClass);
         var st:String = isClass?"*":"";
         var str:String = "<b>{"+st+genLinkString(obj, null, EscHTML(self))+st+"}</b>";
         var props:Array<String> = [];
@@ -556,7 +563,14 @@ class LogReferences extends ConsoleCore
 
         var inherit:UInt = 0;
         var hasstuff:Bool = false;
-        var allFunctions = staticFunctions.concat(functions);
+
+        var allFunctions = staticFunctions;
+
+        if(!isClass)
+        {
+            allFunctions = allFunctions.concat(functions);
+        }
+
         for(allFunction in allFunctions)
         {
             //if(viewAll || self==methodX.declaredBy){
@@ -634,7 +648,14 @@ class LogReferences extends ConsoleCore
         //
         // variables
         //
-        var allVariables = staticVariables.concat(variables);
+
+        var allVariables = staticVariables;
+
+        if(!isClass)
+        {
+            allVariables = allVariables.concat(variables);
+        }
+
         for (allVariable in allVariables) {
             str = allVariable.isStatic?" static":"";
             if(refIndex != 0)
