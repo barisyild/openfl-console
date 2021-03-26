@@ -811,21 +811,64 @@ class LogReferences extends ConsoleCore
      * e.g: openfl.display.Sprite => Sprite
      */
     public static function ShortClassName(obj:Dynamic, eschtml:Bool = true):String{
-        var str:String;
-        if(Reflect.isFunction(obj))
-        {
-            str = "builtin.as$0::MethodClosure";
-        }else{
-            //getQualifiedClassName working little bit different in openfl.
-            //getQualifiedClassName does not return results to functions.
-            str = openfl.Lib.getQualifiedClassName(obj);
-        }
-
+        var str:String = getQualifiedClassName(obj);
         var ind:Int = str.indexOf("::");
         var st:String = Std.is(obj, Class)?"*":"";
         str = st+str.substring(ind>=0?(ind+2):0)+st;
+
+        trace("ShortClassName: " + str);
+
         if(eschtml)
             return EscHTML(str);
+        return str;
+    }
+
+    public static function getQualifiedClassName(value:Dynamic):String
+    {
+        var str:String = null;
+        if(Reflect.isFunction(value))
+        {
+            str = "builtin.as$0.MethodClosure";
+        }else if(Std.is(value, Float))
+        {
+            str = "Float";
+        }else if(Std.is(value, Int))
+        {
+            str = "Int";
+        }else if(Std.is(value, Bool))
+        {
+            str = "Bool";
+        }else if(Std.is(value, String))
+        {
+            str = "String";
+        }else{
+            str = openfl.Lib.getQualifiedClassName(value);
+        }
+
+        if(str == null)
+        {
+            if(Reflect.isObject(value))
+            {
+                str = "Object";
+            }else{
+                trace("You discovered a bug, the following object is not defined to LogReferences.getQualifiedClassName function.");
+                trace(value);
+                trace("Make sure the version of Console you are using is up to date, then report the error.");
+                return "";
+            }
+        }
+
+        //OpenFL getQualifiedClassName return value little bit different.
+        //Flash: flash.display::Stage
+        //OpenFL: openfl.display.Stage
+        var index:Int = str.lastIndexOf(".");
+
+        if(index != -1)
+        {
+            //Let's convert Flash return value to OpenFL return value.
+            str = str.substr(0, index) + "::" + str.substr(index + 1, str.length);
+        }
+
         return str;
     }
 }
