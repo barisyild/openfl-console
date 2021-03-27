@@ -832,12 +832,21 @@ class Console extends Sprite {
         return _soData;
     }
     /**
-		 * @private
-		 */
+     * @private
+     */
     public function updateSO(key:String = null):Void{
         if(_so != null) {
-            if(key != null) _so.setDirty(key);
-            else _so.clear();
+            if(key != null)
+            {
+                _so.setDirty(key);
+                #if !flash
+                _so.flush();
+                #end
+            }
+            else
+            {
+                _so.clear();
+            }
         }
     }
     //
