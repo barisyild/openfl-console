@@ -5,6 +5,7 @@
   "tags": [],
   "description": "",
   "version": "0.0.1",
+  "classPath": "src",
   "releasenote": "",
   "contributors": [
     "barisyild"
