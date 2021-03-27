@@ -848,7 +848,7 @@ class MainPanel extends ConsolePanel {
         if(_mini || !style.topMenu){
             str += "<menu><b> <a href=\"event:show\">‹</a>";
         }else {
-            if(console.panels.channelsPanel){
+            if(!console.panels.channelsPanel){
                 str += getChannelsLink(true);
             }
             str += "<menu> <b>";
