@@ -166,7 +166,7 @@ class Logs extends ConsoleCore {
     }
 
     private function addIfexist(n:String, arr:Array<String>):Void {
-        if(Reflect.hasField(_channels, n))
+        if(_channels.indexOf(n) != -1)
         {
             arr.push(n);
         }
