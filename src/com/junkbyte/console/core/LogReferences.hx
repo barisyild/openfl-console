@@ -161,17 +161,24 @@ class LogReferences extends ConsoleCore
                 }
             }
             return str+"]";
-        //}else if(config.useObjectLinking && v && typeof v == "object") {
+        //}else if(config.useObjectLinking && v && typeof v == "object")
         //TODO: implement required
-        }else if(config.useObjectLinking && v != null && (Std.is(v, DisplayObject) || Std.is(v, Class))) {
+        }else if(config.useObjectLinking && v != null && (Reflect.isObject(v) && !Std.is(v, String)))//(Std.is(v, DisplayObject) || Std.is(v, Class)))
+        {
             var add:String = "";
-            if(Std.is(v, Bytes)) add = " position:"+cast(v, ByteArray).position+" length:"+cast(v, ByteArray).length;
-            else if(Std.is(v, Date) || Std.is(v, Rectangle) || Std.is(v, Point) || Std.is(v, Matrix) || Std.is(v, Event)) add = " "+ cast(v, String);
-            else if(Std.is(v, DisplayObject) && cast(v, DisplayObject).name != null) add = " "+cast(v, DisplayObject).name;
+            if(Std.is(v, Bytes))
+                add = " position:"+cast(v, ByteArray).position+" length:"+cast(v, ByteArray).length;
+            else if(Std.is(v, Date) || Std.is(v, Rectangle) || Std.is(v, Point) || Std.is(v, Matrix) || Std.is(v, Event))
+                add = " "+ Std.string(v);
+            else if(Std.is(v, DisplayObject) && cast(v, DisplayObject).name != null)
+                add = " "+cast(v, DisplayObject).name;
             txt = "{"+genLinkString(o, prop, ShortClassName(v))+EscHTML(add)+"}";
         }else{
-            if(Std.is(v, Bytes)) txt = "[ByteArray position:"+cast(v, ByteArray).position+" length:"+cast(v, ByteArray).length+"]";
-            else txt = Std.string(v);
+            if(Std.is(v, Bytes))
+                txt = "[ByteArray position:"+cast(v, ByteArray).position+" length:"+cast(v, ByteArray).length+"]";
+            else
+                txt = Std.string(v);
+
             if(!html){
                 return shortenString(EscHTML(txt), maxlen, o, prop);
             }
@@ -240,7 +247,7 @@ class LogReferences extends ConsoleCore
             var ind1:Int = str.indexOf("_")+1;
             if(ind1>0){
                 var id:UInt;
-                var prop:String = "";
+                var prop:String = null;
                 var ind2:Int = str.indexOf("_", ind1);
                 if(ind2>0){
                     id = Std.parseInt(str.substring(ind1, ind2));
@@ -249,8 +256,8 @@ class LogReferences extends ConsoleCore
                     id = Std.parseInt(str.substring(ind1));
                 }
                 var o:Dynamic = getRefById(id);
-                //if(prop != null)
-                    //o = Reflect.field(o, prop);
+                if(prop != null)
+                    o = Reflect.field(o, prop);
                 if(o != null){
                     if(str.indexOf("refe_")==0){
                         console.explodech(console.panels.mainPanel.reportChannel, o);
