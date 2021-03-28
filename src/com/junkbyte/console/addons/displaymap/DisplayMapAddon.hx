@@ -91,7 +91,7 @@ class DisplayMapAddon
             }
             else
             {
-                console.error("Current scope", scope, "is not a DisplayObject.");
+                console.error(["Current scope", scope, "is not a DisplayObject."]);
             }
         }
         console.addSlashCommand(commandName, callbackFunction);
@@ -118,8 +118,8 @@ class DisplayMapAddon
 
         var callbackFunction:Function = function():Void
         {
-            var panel:DisplayMapPanel = console.panels.getPanel(DisplayMapPanel.NAME) as DisplayMapPanel;
-            if(panel)
+            var panel:DisplayMapPanel = cast(console.panels.getPanel(DisplayMapPanel.NAME), DisplayMapPanel);
+            if(panel != null)
             {
                 panel.close();
             }

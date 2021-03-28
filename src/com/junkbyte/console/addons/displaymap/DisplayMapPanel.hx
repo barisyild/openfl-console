@@ -47,13 +47,13 @@ class DisplayMapPanel extends ConsolePanel
 
     private var rootDisplay:DisplayObject;
 
-    private var mapIndex:UInt;
+    private var mapIndex:UInt = 0;
 
     private var indexToDisplayMap:Map<Int, Dynamic>;
 
-    private var openings:Dictionary;
+    private var openings:Map<DisplayObject, Bool>;
 
-    private var framesSinceUpdate:UInt;
+    private var framesSinceUpdate:UInt = 0;
 
     public function new(m:Console)
     {
@@ -71,7 +71,7 @@ class DisplayMapPanel extends ConsolePanel
     public function start(container:DisplayObject):Void
     {
         rootDisplay = container;
-        openings = new Dictionary(true);
+        openings = new Map();
 
         if (rootDisplay == null)
         {
@@ -120,7 +120,7 @@ class DisplayMapPanel extends ConsolePanel
             string += "<menu> <a href=\"event:close\"><b>X</b></a></menu><br/>";
 
             var rootParent:DisplayObjectContainer = rootDisplay.parent;
-            if (rootParent)
+            if (rootParent != null)
             {
                 string += "<p5><b>" + makeLink(rootParent, " ^ ", "focus") + "</b>" + makeName(rootParent) + "</p5><br/>";
                 string += printChild(rootDisplay, 1);
@@ -147,7 +147,7 @@ class DisplayMapPanel extends ConsolePanel
         {
             var string:String;
             var container:DisplayObjectContainer = cast(display, DisplayObjectContainer);
-            if (openings[display] == true)
+            if (openings.get(display) == true)
             {
                 string = "<p5><b>" + generateSteps(display, currentStep) + makeLink(display, "-" + container.numChildren, "minimize") + "</b> " + makeName(display) + "</p5><br/>";
                 string += printChildren(container, currentStep + 1);
@@ -223,7 +223,7 @@ class DisplayMapPanel extends ConsolePanel
         console.panels.tooltip(txt, this);
     }
 
-    private function makeName(display:Dynamic):String
+    private function makeName(display:DisplayObject):String
     {
         return makeLink(display, display.name, "scope") + " {<menu>" + makeLink(display, LogReferences.ShortClassName(display), "inspect") + "</menu>}";
     }
@@ -237,8 +237,8 @@ class DisplayMapPanel extends ConsolePanel
 
     private function getDisplay(string:String):DisplayObject
     {
-        var split:Array = string.split("_");
-        return indexToDisplayMap[split[split.length - 1]];
+        var split:Array<String> = string.split("_");
+        return indexToDisplayMap.get(Std.parseInt(split[split.length - 1]));
     }
 
     private function linkHandler(e:TextEvent):Void
@@ -283,18 +283,18 @@ class DisplayMapPanel extends ConsolePanel
 
     private function addToOpening(display:DisplayObject):Void
     {
-        if (openings[display] == undefined)
+        if (!openings.exists(display))
         {
-            openings[display] = true;
+            openings.set(display, true);
             update();
         }
     }
 
     private function removeFromOpening(display:DisplayObject):Void
     {
-        if (openings[display] != undefined)
+        if (openings.exists(display))
         {
-            delete openings[display];
+            openings.remove(display);
             update();
         }
     }
