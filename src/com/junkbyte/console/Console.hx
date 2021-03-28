@@ -187,7 +187,8 @@ class Console extends Sprite {
         }
     }
 
-    private function uncaughtErrorHandle(e:Event):Void{
+    private function uncaughtErrorHandle(e:Event):Void
+    {
         var error:Dynamic = Reflect.hasField(e, "error") ? Reflect.field(e, "error") : e; // for flash 9 compatibility
         var str:String = null;
         if (Std.is(error, Error)){
@@ -196,7 +197,7 @@ class Console extends Sprite {
             str = cast(error, ErrorEvent).text;
         }
         if(str == null){
-            str = cast(error, String);
+            str = Std.string(error);
         }
         report(str, FATAL, false);
     }

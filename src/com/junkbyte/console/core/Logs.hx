@@ -182,7 +182,8 @@ class Logs extends ConsoleCore {
     }
 
     public function addChannel(n:String):Void {
-        _channels.push(n);
+        if(_channels.indexOf(n) == -1)
+            _channels.push(n);
     }
     //
     // Log chain controls
