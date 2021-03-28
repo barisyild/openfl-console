@@ -172,7 +172,7 @@ class DisplayMapPanel extends ConsolePanel
         return string;
     }
 
-    private function generateSteps(display:Dynamic, steps:UInt):String
+    private function generateSteps(display:Dynamic, steps:Int):String
     {
         var str:String = "";
         for (i in 0...steps)

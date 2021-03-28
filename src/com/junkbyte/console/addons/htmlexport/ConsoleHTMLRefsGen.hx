@@ -180,7 +180,7 @@ class ConsoleHTMLRefsGen
         }
         catch(err:Error)
         {
-            return "<p0><i>"+err.toString()+"</i></p0>";
+            return "<p0><i>"+err+"</i></p0>";
         }
         var string:String = console.refs.makeString(v, null, true);
         if(currentDepth < referencesDepth)
