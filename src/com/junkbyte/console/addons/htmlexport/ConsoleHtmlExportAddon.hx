@@ -25,8 +25,8 @@
 */
 package com.junkbyte.console.addons.htmlexport;
 
+import haxe.Json;
 import openfl.errors.Error;
-import openfl.xml.XML;
 import com.junkbyte.console.Cc;
 import com.junkbyte.console.Console;
 import com.junkbyte.console.ConsoleConfig;
@@ -35,8 +35,6 @@ import com.junkbyte.console.view.MainPanel;
 import com.junkbyte.console.vos.Log;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
-import openfl.utils.describeType;
-import openfl.utils.getDefinitionByName;
 
 /**
 	 * This addon allows you to export logs from flash console to a HTML file.
@@ -51,8 +49,7 @@ import openfl.utils.getDefinitionByName;
 	 */
 class ConsoleHtmlExportAddon
 {
-    @:file("template.html")
-    private static var EmbeddedTemplate:ByteArray;
+    private static var EmbeddedTemplate:String;
 
     public static inline var HTML_REPLACEMENT:String = "{text:'HTML_REPLACEMENT'}";
 
@@ -74,8 +71,8 @@ class ConsoleHtmlExportAddon
         {
             console = Cc.instance;
         }
-        var exporter:ConsoleHtmlExportAddon;
-        if (console)
+        var exporter:ConsoleHtmlExportAddon = null;
+        if (console != null)
         {
             exporter = new ConsoleHtmlExportAddon(console);
             console.addMenu(menuName, exporter.exportToFile, new Array(), "Export logs to HTML");
@@ -108,7 +105,7 @@ class ConsoleHtmlExportAddon
         try
         {
             var html:String = exportHTMLString();
-            file['save'](html, fileName); // flash player 10+
+            file.save(html, fileName); // flash player 10+
         }
         catch (err:Error)
         {
@@ -118,9 +115,9 @@ class ConsoleHtmlExportAddon
 
     private function generateFileName():String
     {
-        var date:Date = new Date();
+        var date:Date = Date.now();
         var fileName:String = "log@" + date.getFullYear() + "." + (date.getMonth() + 1) + "." + (date.getDate() + 1);
-        fileName += "_" + date.hours + "." + date.minutes;
+        fileName += "_" + date.getHours() + "." + date.getMinutes();
         fileName += ".html";
         return fileName;
     }
@@ -131,24 +128,14 @@ class ConsoleHtmlExportAddon
     public function exportHTMLString():String
     {
         var html:String = EmbeddedTemplate.toString();
-        html = html.replace(HTML_REPLACEMENT, exportJSON());
+        html = StringTools.replace(html, HTML_REPLACEMENT, exportJSON());
         return html;
     }
 
     private function exportJSON():String
     {
         var object:Dynamic = exportObject();
-        try
-        {
-            var nativeJSON:Class = cast(getDefinitionByName("JSON"), Class);
-            return nativeJSON["stringify"](object);
-        }
-        catch (error:Error)
-        {
-            // native json not found. pre flash player 11.
-        }
-        var libJSON:Class = cast(getDefinitionByName("com.adobe.serialization.json.JSON"), Class);
-        return libJSON["encode"](object);
+        return Json.stringify(object);
     }
 
     private function exportObject():Dynamic
@@ -176,10 +163,10 @@ class ConsoleHtmlExportAddon
     {
         var style:ConsoleStyle = console.config.style;
         /*if(!preserveStyle)
-			{
-				style = new ConsoleStyle();
-				style.updateStyleSheet();
-			}*/
+        {
+            style = new ConsoleStyle();
+            style.updateStyleSheet();
+        }*/
 
         var object:Dynamic = convertTypeToObject(style);
         object.styleSheet = getStyleSheetToEncode(style);
@@ -208,9 +195,9 @@ class ConsoleHtmlExportAddon
         return object;
     }
 
-    private function getLogsToEncode():Dynamic
+    private function getLogsToEncode():Array<Dynamic>
     {
-        var lines:Array = new Array();
+        var lines:Array<Dynamic> = new Array();
         var line:Log = console.logs.last;
         while (line != null)
         {
@@ -227,8 +214,8 @@ class ConsoleHtmlExportAddon
     private function convertTypeToObject(typedObject:Dynamic):Dynamic
     {
         var object:Dynamic = {};
-        var desc:XML = describeType(typedObject);
-        /*for each (var varXML:XML in desc.variable)
+        /*var desc:XML = describeType(typedObject);
+        for each (var varXML:XML in desc.variable)
         {
             var key:String = varXML.@name;
             object[key] = typedObject[key];

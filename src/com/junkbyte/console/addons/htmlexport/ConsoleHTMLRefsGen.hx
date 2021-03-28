@@ -25,19 +25,16 @@
 package com.junkbyte.console.addons.htmlexport;
 import com.junkbyte.console.utils.FlashRegex;
 import openfl.errors.Error;
-import openfl.xml.XML;
 import com.junkbyte.console.Console;
 import com.junkbyte.console.core.LogReferences;
 import com.junkbyte.console.vos.Log;
 
-import openfl.utils.describeType;
-
 /**
-	 * @private
-	 */
+ * @private
+ */
 class ConsoleHTMLRefsGen
 {
-    private static inline var refSearchExpression:EReg = ~/<a(\s+)href=\'event:ref_(\d+)\'>/g;
+    private static var refSearchExpression:EReg = ~/<a(\s+)href=\\'event:ref_(\d+)\\'>/g;
 
     private var console:Console;
     private var referencesDepth:UInt;
@@ -87,9 +84,10 @@ class ConsoleHTMLRefsGen
     {
         // should reuse code from LogReference, but not possible atm. wait for modular version.
 
-        var V:XML = describeType(obj);
+        /*var V:XML = describeType(obj);
         var cls:Dynamic = Std.is(obj, Class)?obj:obj.constructor;
-        var clsV:XML = describeType(cls);
+        var clsV:XML = describeType(cls);*/
+        //TODO: implement required
 
         var isClass:Bool = Std.is(obj, Class);
 
@@ -157,7 +155,7 @@ class ConsoleHTMLRefsGen
         // - It can sometimes fail if we are looking at proxy object which havnt extended nextNameIndex, nextName, etc.
         var dynamicVariables:Dynamic = {};
         result.dynamicVariables = dynamicVariables;
-        try
+        /*try
         {
             for (X in obj)
             {
@@ -167,16 +165,18 @@ class ConsoleHTMLRefsGen
         catch(e : Error)
         {
             result.dynamicVariables = e.message;
-        }
+        }*/
+        //TODO: implement required
 
         return result;
     }
 
     private function makeValue(obj:Dynamic, prop:Dynamic, currentDepth:UInt):String
     {
+        var v:Dynamic = null;
         try
         {
-            var v:Dynamic = obj[prop];
+            v = obj[prop];
         }
         catch(err:Error)
         {
