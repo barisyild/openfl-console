@@ -24,27 +24,27 @@
 */
 package com.junkbyte.console.core;
 
-import haxe.ds.WeakMap;
-import openfl.system.System;
-import openfl.errors.Error;
-import com.junkbyte.console.Console;
-import openfl.utils.Dictionary;
 
 /**
  * @private
  */
+/*#if !html5
+import haxe.ds.WeakMap;
+import openfl.system.System;
+import openfl.errors.Error;
+import com.junkbyte.console.Console;
+
 class MemoryMonitor extends ConsoleCore {
 
     private var _namesList:Map<String, Bool>;
-    private var _objectsList:#if !html5 WeakMap #else Map #end<Dynamic, String>;
+    private var _objectsList:WeakMap<Dynamic, String>;
     private var _count:UInt;
     //
     //
     public function new(m:Console) {
         super(m);
         _namesList = new Map();
-        //TODO: Find a way to run WeakMap in html5.
-        _objectsList = new #if !html5 WeakMap #else Map #end<#if !html5 Dynamic #else String #end, String>();
+        _objectsList = new WeakMap<Dynamic, String>();
 
         console.remoter.registerCallback("gc", gc);
     }
@@ -137,3 +137,106 @@ class MemoryMonitor extends ConsoleCore {
         }
     }
 }
+#else*/
+import haxe.ds.WeakMap;
+import openfl.system.System;
+import openfl.errors.Error;
+import com.junkbyte.console.Console;
+
+class MemoryMonitor extends ConsoleCore
+{
+    private var _objectsList:Map<String, WeakRef>;
+    private var _count:UInt = 0;
+    //
+    //
+    public function new(m:Console) {
+        super(m);
+        _objectsList = new Map<String, WeakRef>();
+        var weakRef = new WeakRef(this._objectsList);
+        console.remoter.registerCallback("gc", gc);
+    }
+
+    public function watch(obj:Dynamic, n:String):String {
+        var className:String = openfl.Lib.getQualifiedClassName(obj);
+        if(n == null) n = className+"@"+openfl.Lib.getTimer();
+
+        if(_objectsList.exists(n)){
+            unwatch(n);
+        }
+
+        _count++;
+        _objectsList.set(n, new WeakRef(obj));
+        //if(!config.quiet) report("Watching <b>"+className+"</b> as <p5>"+ n +"</p5>.",-1);
+        return n;
+    }
+
+    public function unwatch(n:String):Void {
+        if(_objectsList.exists(n))
+        {
+            _objectsList.remove(n);
+            _count--;
+        }
+    }
+    //
+    //
+    //
+    public function update():Void {
+        if(_count == 0) return;
+
+        var arr:Array<String> = new Array();
+        var o:Dynamic = {};
+
+        for(key in _objectsList.keys()){
+            var weakRef = _objectsList.get(key);
+            var isAvailable = weakRef.deref() != null;
+            if(!isAvailable)
+            {
+                arr.push(key);
+                _count--;
+            }
+        }
+
+        for(key in arr)
+        {
+            _objectsList.remove(key);
+        }
+
+        if(arr.length != 0) report("<b>GARBAGE COLLECTED "+arr.length+" item(s): </b>"+arr.join(", "),-2);
+    }
+
+    public var count(get, never):UInt;
+    public function get_count():UInt {
+        return _count;
+    }
+
+    public function gc():Void {
+        if(remoter.remoting == Remoting.RECIEVER){
+            try{
+                //report("Sending garbage collection request to client",-1);
+                remoter.send("gc");
+            }catch(e:Error){
+                report(e,10);
+            }
+        }else{
+            var ok:Bool = false;
+            try{
+                // have to put in brackes cause some compilers will complain.
+                if(Reflect.hasField(System, "gc")) {
+                    System.gc();
+                    ok = true;
+                }
+            }catch(e:Error){
+
+            }
+
+            var str:String = "Manual garbage collection "+(ok?"successful.":"FAILED. You need debugger version of flash player.");
+            report(str,(ok?-1:10));
+        }
+    }
+}
+
+@:native("WeakRef") extern class WeakRef {
+    public function new(element:Dynamic):Void;
+    public function deref():Dynamic;
+}
+//#end
