@@ -361,7 +361,14 @@ class LogReferences extends ConsoleCore
             objClass = Type.getClass(obj);
         }
 
-        var self:String = Type.getClassName(objClass);
+        var self:String;
+
+        if(objClass == null)
+        {
+            self = "Object";
+        }else{
+            self = Type.getClassName(objClass);
+        }
         var st:String = isClass?"*":"";
         var str:String = "<b>{"+st+genLinkString(obj, null, EscHTML(self))+st+"}</b>";
         var props:Array<String> = [];
