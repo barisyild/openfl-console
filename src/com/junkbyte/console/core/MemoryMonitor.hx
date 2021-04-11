@@ -28,7 +28,7 @@ package com.junkbyte.console.core;
 /**
  * @private
  */
-/*#if !html5
+#if !html5
 import haxe.ds.WeakMap;
 import openfl.system.System;
 import openfl.errors.Error;
@@ -137,7 +137,7 @@ class MemoryMonitor extends ConsoleCore {
         }
     }
 }
-#else*/
+#else
 import haxe.ds.WeakMap;
 import openfl.system.System;
 import openfl.errors.Error;
@@ -239,4 +239,4 @@ class MemoryMonitor extends ConsoleCore
     public function new(element:Dynamic):Void;
     public function deref():Dynamic;
 }
-//#end
+#end
