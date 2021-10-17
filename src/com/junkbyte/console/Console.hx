@@ -514,22 +514,20 @@ class Console extends Sprite {
      * @copy com.junkbyte.console.Cc#setViewingChannels()
      */
 
-    //TODO: Warning Modified arguement, ...channels:Array => channels:Array<Dynamic>
-    public function setViewingChannels(channels:Array<Dynamic>):Void {
+    public function setViewingChannels(#if (haxe_ver >= "4.2.0") ...channels:Dynamic #else channels:Array<Dynamic> #end):Void {
         //_panels.mainPanel.setViewingChannels.apply(this, channels);
         //TODO: implement required
 
-        _panels.mainPanel.setViewingChannels(channels);
+        _panels.mainPanel.setViewingChannels(#if (haxe_ver >= "4.2.0") ...channels #else channels #end);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#setIgnoredChannels()
 		 */
-    //TODO: Warning Modified arguement, ...channels:Array => channels:Array<Dynamic>
-    public function setIgnoredChannels(channels:Array<Dynamic>):Void {
+    public function setIgnoredChannels(#if (haxe_ver >= "4.2.0") ...channels:Dynamic #else channels:Array<Dynamic> #end):Void {
         //_panels.mainPanel.setIgnoredChannels.apply(this, channels);
         //TODO: implement required
-        _panels.mainPanel.setIgnoredChannels(channels);
+        _panels.mainPanel.setIgnoredChannels(#if (haxe_ver >= "4.2.0") ...channels #else channels #end);
     }
 
     /**
@@ -612,48 +610,42 @@ class Console extends Sprite {
     /**
      * @copy com.junkbyte.console.Cc#log()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function log(strings:Array<Dynamic>):Void {
+    public function log(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, LOG);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#info()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function info(strings:Array<Dynamic>):Void {
+    public function info(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, INFO);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#debug()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function debug(strings:Array<Dynamic>):Void {
+    public function debug(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, DEBUG);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#warn()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function warn(strings:Array<Dynamic>):Void {
+    public function warn(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, WARN);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#error()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function error(strings:Array<Dynamic>):Void {
+    public function error(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, ERROR);
     }
 
     /**
      * @copy com.junkbyte.console.Cc#fatal()
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function fatal(strings:Array<Dynamic>):Void {
+    public function fatal(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, FATAL);
     }
 
@@ -667,55 +659,48 @@ class Console extends Sprite {
     /**
 		 * @copy com.junkbyte.console.Cc#logch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function logch(channel:Dynamic, strings:Array<Dynamic>):Void {
+    public function logch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, LOG, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#infoch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function infoch(channel:Dynamic, strings:Array<Dynamic>):Void {
+    public function infoch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, INFO, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#debugch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function debugch(channel:Dynamic, strings:Array<Dynamic>):Void {
+    public function debugch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, DEBUG, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#warnch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function warnch(channel:Dynamic, strings:Array<Dynamic>):Void {
+    public function warnch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, WARN, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#errorch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function errorch(channel:Dynamic, strings:Array<Dynamic>):Void {
+    public function errorch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, ERROR, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#fatalch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public function fatalch(channel:Dynamic, strings:Array<Dynamic>):Void {
+    public function fatalch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void {
         addLine(strings, FATAL, channel);
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#addCh()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
     public function addCh(channel:Dynamic, strings:Array<Dynamic>, priority:Int = 2, isRepeating:Bool = false):Void{
         addLine(strings, priority, channel, isRepeating);
     }
@@ -723,20 +708,18 @@ class Console extends Sprite {
     /**
 		 * @copy com.junkbyte.console.Cc#addHTML()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function addHTML(strings:Array<String>):Void {
-        addLine(strings, 2, DEFAULT_CHANNEL, false, testHTML(strings));
+    public function addHTML(#if (haxe_ver >= "4.2.0") ...strings:String #else strings:Array<String> #end):Void {
+        addLine(strings, 2, DEFAULT_CHANNEL, false, testHTML(#if (haxe_ver >= "4.2.0") ...strings #else strings #end));
     }
 
     /**
 		 * @copy com.junkbyte.console.Cc#addHTMLch()
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public function addHTMLch(channel:Dynamic, priority:Int, strings:Array<String>):Void {
-        addLine(strings, priority, channel, false, testHTML(strings));
+    public function addHTMLch(channel:Dynamic, priority:Int, #if (haxe_ver >= "4.2.0") ...strings:String #else strings:Array<String> #end):Void {
+        addLine(strings, priority, channel, false, testHTML(#if (haxe_ver >= "4.2.0") ...strings #else strings #end));
     }
 
-    private function testHTML(args:Array<String>):Bool{
+    private function testHTML(#if (haxe_ver >= "4.2.0") ...args:String #else args:Array<String> #end):Bool{
         try{
             //new XML("<p>"+args.join("")+"</p>"); // OR use RegExp?
             //TODO: implement required

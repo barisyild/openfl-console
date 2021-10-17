@@ -139,11 +139,10 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function log(strings:Array<Dynamic>):Void{
+    public static function log(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         //_console.log.apply(null, strings);
         //TODO: implement required
-        if(_console != null) _console.log(strings);
+        if(_console != null) _console.log(#if (haxe_ver >= "4.2.0") ...strings #else strings #end);
     }
     /**
 		 * Add log line with priority 3
@@ -151,11 +150,10 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function info(strings:Array<Dynamic>):Void{
+    public static function info(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         //_console.info.apply(null, strings);
         //TODO: implement required
-        if(_console != null) _console.info(strings);
+        if(_console != null) _console.info(#if (haxe_ver >= "4.2.0") ...strings #else strings #end);
     }
     /**
 		 * Add log line with priority 5
@@ -163,11 +161,11 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function debug(strings:Array<Dynamic>):Void{
+
+    public static function debug(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         //_console.debug.apply(null, strings);
         //TODO: implement required
-        if(_console != null) _console.debug(strings);
+        if(_console != null) _console.debug(#if (haxe_ver >= "4.2.0") ...strings #else strings #end);
     }
     /**
 		 * Add log line with priority 7
@@ -175,11 +173,11 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function warn(strings:Array<Dynamic>):Void{
+
+    public static function warn(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         //_console.warn.apply(null, strings);
         //TODO: implement required
-        if(_console != null) _console.warn(strings);
+        if(_console != null) _console.warn(#if (haxe_ver >= "4.2.0") ...strings #else strings #end);
     }
     /**
 		 * Add log line with priority 9
@@ -187,11 +185,11 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function error(strings:Array<Dynamic>):Void{
+
+    public static function error(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         //_console.error.apply(null, strings);
         //TODO: implement required
-        if(_console != null) _console.error(strings);
+        if(_console != null) _console.error(#if (haxe_ver >= "4.2.0") ...strings #else strings #end);
     }
     /**
 		 * Add log line with priority 10
@@ -199,11 +197,10 @@ class Cc{
 		 *
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function fatal(strings:Array<Dynamic>):Void{
+    public static function fatal(#if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         //_console.fatal.apply(null, strings);
         //TODO: implement required
-        if(_console != null) _console.fatal(strings);
+        if(_console != null) _console.fatal(#if (haxe_ver >= "4.2.0") ...strings #else strings #end);
     }
     /**
 		 * Add log line with priority 1 to channel
@@ -212,8 +209,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function logch(channel:Dynamic, strings:Array<Dynamic>):Void{
+
+    public static function logch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         if(_console != null) _console.addCh(channel, strings, Console.LOG);
     }
     /**
@@ -223,8 +220,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function infoch(channel:Dynamic, strings:Array<Dynamic>):Void{
+
+    public static function infoch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         if(_console != null) _console.addCh(channel, strings, Console.INFO);
     }
     /**
@@ -234,8 +231,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function debugch(channel:Dynamic, strings:Array<Dynamic>):Void{
+
+    public static function debugch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         if(_console != null) _console.addCh(channel, strings, Console.DEBUG);
     }
     /**
@@ -245,7 +242,6 @@ class Cc{
      * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
      * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
      */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
     public static function warnch(channel:Dynamic, strings:Array<Dynamic>):Void{
         if(_console != null) _console.addCh(channel, strings, Console.WARN);
     }
@@ -256,8 +252,8 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function errorch(channel:Dynamic, strings:Array<Dynamic>):Void{
+
+    public static function errorch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         if(_console != null) _console.addCh(channel, strings, Console.ERROR);
     }
     /**
@@ -267,8 +263,7 @@ class Cc{
 		 * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<Dynamic>
-    public static function fatalch(channel:Dynamic, strings:Array<Dynamic>):Void{
+    public static function fatalch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         if(_console != null) _console.addCh(channel, strings, Console.FATAL);
     }
     /**
@@ -354,11 +349,10 @@ class Cc{
 		 * 
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function addHTML(strings:Array<String>):Void {
+    public static function addHTML(#if (haxe_ver >= "4.2.0") ...strings:String #else strings:Array<String> #end):Void {
         //_console.addHTML.apply(null, strings);
         //TODO: implement required
-        if(_console != null) _console.addHTML(strings);
+        if(_console != null) _console.addHTML(#if (haxe_ver >= "4.2.0") ...strings #else strings #end);
     }
     /**
 		 * Add html formated strings to channel with priority
@@ -375,11 +369,11 @@ class Cc{
 		 * @param priority 	Priority of line. 0-10, the higher the number the more visibilty it is in the log, and can be filtered through UI
 		 * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
 		 */
-    //TODO: Warning Modified arguement, ...strings => strings:Array<String>
-    public static function addHTMLch(channel:Dynamic, priority:Int, strings:Array<String>):Void {
+
+    public static function addHTMLch(channel:Dynamic, priority:Int, #if (haxe_ver >= "4.2.0") ...strings:String #else strings:Array<String> #end):Void {
         //_console.addHTMLch.apply(null, new Array(channel, priority).concat(strings));
         //TODO: implement required
-        if(_console != null) _console.addHTMLch(channel, priority, strings);
+        if(_console != null) _console.addHTMLch(channel, priority, #if (haxe_ver >= "4.2.0") ...strings #else strings #end);
     }
     /**
 		 * Print the display list map
@@ -606,11 +600,10 @@ class Cc{
      * @param ...channels Channels to view. Send empty to view all channels (global channel).
      * @see #setIgnoredChannels()
      */
-    //TODO: Warning Modified arguement, ...channels:Array => channels:Array<Dynamic>
-    public static function setViewingChannels(channels:Array<Dynamic>):Void{
+    public static function setViewingChannels(#if (haxe_ver >= "4.2.0") ...channels:Dynamic #else channels:Array<Dynamic> #end):Void{
         //_console.setViewingChannels.apply(null, channels);
         //TODO: implement required
-        if(_console != null) _console.setViewingChannels(channels);
+        if(_console != null) _console.setViewingChannels(#if (haxe_ver >= "4.2.0") ...channels #else channels #end);
     }
     /**
      * Set ignored viewing channels.
@@ -618,11 +611,10 @@ class Cc{
      * @param ...channels Channels to view. Send empty to view all channels (global channel).
      * @see #setViewingChannels()
      */
-    //TODO: Warning Modified arguement, ...channels:Array => channels:Array<Dynamic>
-    public static function setIgnoredChannels(channels:Array<Dynamic>):Void{
+    public static function setIgnoredChannels(#if (haxe_ver >= "4.2.0") ...channels:Dynamic #else channels:Array<Dynamic> #end):Void{
         //_console.setIgnoredChannels.apply(null, channels);
         //TODO: implement required
-        if(_console != null) _console.setIgnoredChannels(channels);
+        if(_console != null) _console.setIgnoredChannels(#if (haxe_ver >= "4.2.0") ...channels #else channels #end);
     }
     /**
 		 * Set minimum viewing priority level.

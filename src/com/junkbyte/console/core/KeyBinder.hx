@@ -109,8 +109,7 @@ class KeyBinder extends ConsoleCore {
         }
     }
 
-    //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-    private function printBinds(args:Array<Dynamic>):Void {
+    private function printBinds(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
         report("Key binds:", -2);
         var i:UInt = 0;
         for (X in _binds){

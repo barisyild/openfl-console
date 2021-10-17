@@ -238,11 +238,10 @@ class MemoryRecorder extends EventDispatcher
         return "";
     }
 
-    //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-    private function report(args:Array<Dynamic>):Void
+    private function report(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void
     {
         var call:Function = reportCallback != null ? reportCallback : trace;
-        call.apply(this, args);
+        call(this, #if (haxe_ver >= "4.2.0") ...args #else args #end);
     }
 
     private function shouldPrintClass(type:Class):Bool

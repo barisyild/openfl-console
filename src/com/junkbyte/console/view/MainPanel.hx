@@ -503,8 +503,7 @@ class MainPanel extends ConsolePanel {
     /**
      * @private
      */
-    //TODO: Warning Modified arguement, ...channels:Array => channels:Array<Dynamic>
-    public function setViewingChannels(channels:Array<Dynamic>):Void{
+    public function setViewingChannels(#if (haxe_ver >= "4.2.0") ...channels:Dynamic #else channels:Array<Dynamic> #end):Void{
         var a:Array<String> = new Array();
         for(item in channels) a.push(Console.MakeChannelName(item));
 
@@ -542,8 +541,8 @@ class MainPanel extends ConsolePanel {
     /**
      * @private
      */
-    //TODO: Warning Modified arguement, ...channels:Array => channels:Array<Dynamic>
-    public function setIgnoredChannels(channels:Array<Dynamic>):Void{
+
+    public function setIgnoredChannels(#if (haxe_ver >= "4.2.0") ...channels:Dynamic #else channels:Array<Dynamic> #end):Void{
         var a:Array<String> = new Array();
         for(item in channels) a.push(Console.MakeChannelName(item));
 
@@ -1119,8 +1118,8 @@ class MainPanel extends ConsolePanel {
     //
     // COMMAND LINE
     //
-    //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-    private function clearCommandLineHistory(args:Array<Dynamic>):Void
+
+    private function clearCommandLineHistory(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void
     {
         _cmdsInd = -1;
         console.updateSO();

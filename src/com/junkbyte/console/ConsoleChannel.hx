@@ -58,9 +58,8 @@ class ConsoleChannel {
 		 * @param String to be logged, any type can be passed and will be converted to string
 		 */
 
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    public function log(args:Array<Dynamic>):Void {
-        multiadd(_c.logch, args);
+    public function log(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
+        multiadd(_c.logch, #if (haxe_ver >= "4.2.0") ...args #else args #end);
     }
     /**
 		 * Add log line with priority 3 to channel
@@ -69,9 +68,8 @@ class ConsoleChannel {
 		 * @param String to be logged, any type can be passed and will be converted to string
 		 */
 
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    public function info(args:Array<Dynamic>):Void {
-        multiadd(_c.infoch, args);
+    public function info(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
+        multiadd(_c.infoch, #if (haxe_ver >= "4.2.0") ...args #else args #end);
     }
     /**
 		 * Add log line with priority 5 to channel
@@ -80,9 +78,8 @@ class ConsoleChannel {
 		 * @param String to be logged, any type can be passed and will be converted to string
 		 */
 
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    public function debug(args:Array<Dynamic>):Void {
-        multiadd(_c.debugch, args);
+    public function debug(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
+        multiadd(_c.debugch, #if (haxe_ver >= "4.2.0") ...args #else args #end);
     }
     /**
 		 * Add log line with priority 7 to channel
@@ -91,9 +88,8 @@ class ConsoleChannel {
 		 * @param String to be logged, any type can be passed and will be converted to string
 		 */
 
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    public function warn(args:Array<Dynamic>):Void {
-        multiadd(_c.warnch, args);
+    public function warn(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
+        multiadd(_c.warnch, #if (haxe_ver >= "4.2.0") ...args #else args #end);
     }
     /**
 		 * Add log line with priority 9 to channel
@@ -103,9 +99,8 @@ class ConsoleChannel {
 		 * @param String to be logged, any type can be passed and will be converted to string
 		 */
 
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    public function error(args:Array<Dynamic>):Void {
-        multiadd(_c.errorch, args);
+    public function error(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
+        multiadd(_c.errorch, #if (haxe_ver >= "4.2.0") ...args #else args #end);
     }
     /**
 		 * Add log line with priority 10 to channel
@@ -114,16 +109,14 @@ class ConsoleChannel {
 		 * @param  Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
 		 * @param String to be logged, any type can be passed and will be converted to string
 		 */
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    public function fatal(args:Array<Dynamic>):Void
+    public function fatal(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void
     {
-        multiadd(_c.fatalch, args);
+        multiadd(_c.fatalch, #if (haxe_ver >= "4.2.0") ...args #else args #end);
     }
 
-    //TODO: Warning Modified arguement, args:Array => args:Array<Dynamic>
-    private function multiadd(f:Function, args:Array<Dynamic>):Void
+    private function multiadd(f:Function, #if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void
     {
-        if(enabled) f.apply(null, new Array(_name).concat(args));
+        if(enabled) f(null, new Array(_name).concat(args));
     }
     /**
 		 * Add log line with priority 10 to channel

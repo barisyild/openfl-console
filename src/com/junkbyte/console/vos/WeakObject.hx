@@ -97,8 +97,7 @@ class WeakObject {
         return get(n);
     }
 
-    //TODO: Warning Modified arguement, ...rest => rest:Array<Dynamic>
-    public function callProperty(n:Dynamic, rest:Array<Dynamic>):Dynamic {
+    public function callProperty(n:Dynamic, #if (haxe_ver >= "4.2.0") ...rest:Dynamic #else rest:Array<Dynamic> #end):Dynamic {
         var o:Dynamic = get(n);
         return o.apply(this, rest);
     }

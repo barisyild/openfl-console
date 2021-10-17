@@ -133,8 +133,7 @@ class ConsoleConfig {
      * @see tracing
      */
 
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    public var traceCall:Function =  function(ch:String, line:String, args:Array<Dynamic>):Void
+    public var traceCall:Function =  function(ch:String, line:String, #if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void
     {
         trace("["+ch+"] "+line);
     };

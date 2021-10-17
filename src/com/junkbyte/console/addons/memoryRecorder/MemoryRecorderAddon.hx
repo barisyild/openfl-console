@@ -32,11 +32,10 @@ class MemoryRecorderAddon
 
     public static function registerToConsole(console:Console, key:String = "r"):Void
     {
-        //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-        MemoryRecorder.instance.reportCallback = function(args:Array<Dynamic>):Void
+        MemoryRecorder.instance.reportCallback = function(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void
         {
             args.unshift("R");
-            console.infoch.apply(null, args);
+            console.infoch(null, #if (haxe_ver >= "4.2.0") ...args #else args #end);
         }
 
         var onMemoryRecorderStart:Function = function():Void

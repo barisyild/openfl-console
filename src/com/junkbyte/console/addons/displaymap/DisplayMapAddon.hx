@@ -81,8 +81,7 @@ class DisplayMapAddon
             return;
         }
 
-        //TODO: Warning Modified arguement, ...arguments:Array => arguments:Array<Dynamic>
-        var callbackFunction:Function = function(arguments:Array<Dynamic>):Void
+        var callbackFunction:Function = function(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void
         {
             var scope:Dynamic = console.cl.run("this");
             if (Std.is(scope, DisplayObject))

@@ -379,8 +379,7 @@ class CommandLine extends ConsoleCore {
         store(param, _scope, true);
     }
 
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    private function savedCmd(args:Array<Dynamic>):Void {
+    private function savedCmd(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
         report("Saved vars: ", -1);
         var sii:UInt = 0;
         var sii2:UInt = 0;
@@ -398,8 +397,7 @@ class CommandLine extends ConsoleCore {
         setReturned(param, true);
     }
 
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    private function cmdsCmd(args:Array<Dynamic>):Void {
+    private function cmdsCmd(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
         var buildin:Array<SlashCommand> = [];
         var custom:Array<SlashCommand> = [];
         for(cmd in _slashCmds){
@@ -424,8 +422,7 @@ class CommandLine extends ConsoleCore {
         }
     }
 
-    //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-    private function inspectCmd(args:Array<Dynamic>):Void {
+    private function inspectCmd(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
         console.refs.focus(_scope);
     }
 
@@ -444,24 +441,20 @@ class CommandLine extends ConsoleCore {
         setReturned(fakeFunction.exec, true);
     }
 
-    //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-    private function autoscopeCmd(args:Array<Dynamic>):Void {
+    private function autoscopeCmd(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
         config.commandLineAutoScope = !config.commandLineAutoScope;
         report("Auto-scoping <b>"+(config.commandLineAutoScope?"enabled":"disabled")+"</b>.",10);
     }
 
-    //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-    private function baseCmd(args:Array<Dynamic>):Void {
+    private function baseCmd(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
         setReturned(base, true);
     }
 
-    //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-    private function prevCmd(args:Array<Dynamic>):Void {
+    private function prevCmd(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
         setReturned(_prevScope.reference, true);
     }
 
-    //TODO: Warning Modified arguement, ...args:Array => args:Array<Dynamic>
-    private function printHelp(args:Array<Dynamic>):Void {
+    private function printHelp(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void {
         report("____Command Line Help___",10);
         report("/filter (text) = filter/search logs for matching text",5);
         report("/commands to see all slash commands",5);
@@ -482,8 +475,7 @@ class FakeFunction {
         run = r;
         line = l;
     }
-    //TODO: Warning Modified arguement, ...args => args:Array<Dynamic>
-    public function exec(args:Array<Dynamic>):Dynamic
+    public function exec(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Dynamic
     {
         return run(line, args);
     }

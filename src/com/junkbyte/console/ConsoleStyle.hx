@@ -257,7 +257,7 @@ class ConsoleStyle {
         return _css;
     }
 
-    //TODO: Warning Modified arguement, n:Number => n:Float
+    //TODO: Warning Modified arguement, n:Number => n:UInt
     private function hesh(n:UInt):String{
         return "#" + StringTools.hex(n);
     }
