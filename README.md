@@ -8,6 +8,7 @@ No special browser or player version is required.
 ### New features
 
 * Optional tilemap support has been added to Display Roller. *(It must be enabled from config)*
+* *[New Addon]* Run scripts with HScript addon.
 
 ### Main features
 
