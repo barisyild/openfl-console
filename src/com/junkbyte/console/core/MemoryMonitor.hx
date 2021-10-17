@@ -161,9 +161,8 @@ class MemoryMonitor extends ConsoleCore
         if(n == null) n = className+"@"+openfl.Lib.getTimer();
 
         if(_objectsList.exists(n)){
-            unwatch(n);
+            n = n+"@"+openfl.Lib.getTimer()+"_"+Math.floor(Math.random()*100);
         }
-
         _count++;
         _objectsList.set(n, new WeakRef(obj));
         //if(!config.quiet) report("Watching <b>"+className+"</b> as <p5>"+ n +"</p5>.",-1);
