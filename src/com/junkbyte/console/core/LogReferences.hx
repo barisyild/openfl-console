@@ -129,7 +129,7 @@ class LogReferences extends ConsoleCore
             //TODO: implement required
             return "makeString: implement required.";
         }
-        if(Std.is(v, Error)) {
+        if(Std.isOfType(v, Error)) {
             var err:Error = cast(v, Error);
             // err.getStackTrace() is not supported in non-debugger players...
             var stackstr:String = Reflect.hasField(err, "getStackTrace")?err.getStackTrace():Std.string(err);
@@ -137,14 +137,14 @@ class LogReferences extends ConsoleCore
                 return stackstr;
             }
             return Std.string(err);
-        /*}else if(Std.is(v, XML) || Std.is(v, XMLList)){
+        /*}else if(Std.isOfType(v, XML) || Std.isOfType(v, XMLList)){
             return shortenString(EscHTML(cast(v, XML).toXMLString()), maxlen, o, prop);
-        }else if(Std.is(v, QName)){
+        }else if(Std.isOfType(v, QName)){
             return cast(v, String);*/
             //TODO: implement required
-        //}else if(Std.is(v, Array) || openfl.Lib.getQualifiedClassName(v).indexOf("__AS3__.vec::Vector.") == 0){
+        //}else if(Std.isOfType(v, Array) || openfl.Lib.getQualifiedClassName(v).indexOf("__AS3__.vec::Vector.") == 0){
             //TODO: implement required
-        }else if(Std.is(v, Array)){
+        }else if(Std.isOfType(v, Array)){
             // note: using openfl.Lib.getQualifiedClassName for vector for backward compatibility
             // Need to specifically cast to string in array to produce correct results
             // e.g: new Array("str",null,undefined,0).toString() // traces to: str,,,0, SHOULD BE: str,null,undefined,0
@@ -163,18 +163,18 @@ class LogReferences extends ConsoleCore
             return str+"]";
         //}else if(config.useObjectLinking && v && typeof v == "object")
         //TODO: implement required
-        }else if(config.useObjectLinking && v != null && (Reflect.isObject(v) && !Std.is(v, String)))//(Std.is(v, DisplayObject) || Std.is(v, Class)))
+        }else if(config.useObjectLinking && v != null && (Reflect.isObject(v) && !Std.isOfType(v, String)))//(Std.isOfType(v, DisplayObject) || Std.isOfType(v, Class)))
         {
             var add:String = "";
-            if(Std.is(v, Bytes))
+            if(Std.isOfType(v, Bytes))
                 add = " position:"+cast(v, ByteArray).position+" length:"+cast(v, ByteArray).length;
-            else if(Std.is(v, Date) || Std.is(v, Rectangle) || Std.is(v, Point) || Std.is(v, Matrix) || Std.is(v, Event))
+            else if(Std.isOfType(v, Date) || Std.isOfType(v, Rectangle) || Std.isOfType(v, Point) || Std.isOfType(v, Matrix) || Std.isOfType(v, Event))
                 add = " "+ Std.string(v);
-            else if(Std.is(v, DisplayObject) && cast(v, DisplayObject).name != null)
+            else if(Std.isOfType(v, DisplayObject) && cast(v, DisplayObject).name != null)
                 add = " "+cast(v, DisplayObject).name;
             txt = "{"+genLinkString(o, prop, ShortClassName(v))+EscHTML(add)+"}";
         }else{
-            if(Std.is(v, Bytes))
+            if(Std.isOfType(v, Bytes))
                 txt = "[ByteArray position:"+cast(v, ByteArray).position+" length:"+cast(v, ByteArray).length+"]";
             else
                 txt = Std.string(v);
@@ -187,9 +187,9 @@ class LogReferences extends ConsoleCore
     }
 
     public function makeRefTyped(v:Dynamic):String{
-        //if(v != null && Type.typeof(v) == ValueType.TObject && !Std.is(v, QName))
+        //if(v != null && Type.typeof(v) == ValueType.TObject && !Std.isOfType(v, QName))
         //TODO: implement required
-        if(v != null && (Type.typeof(v) == ValueType.TObject || Std.is(v, DisplayObject) || Std.is(v, Tile)))
+        if(v != null && (Type.typeof(v) == ValueType.TObject || Std.isOfType(v, DisplayObject) || Std.isOfType(v, Tile)))
         {
             return "{" + genLinkString(v, null, ShortClassName(v)) + "}";
         }
@@ -197,7 +197,7 @@ class LogReferences extends ConsoleCore
     }
 
     private function genLinkString(o:Dynamic, prop:Dynamic, str:String):String{
-        if(prop != null && !Std.is(prop, String)) {
+        if(prop != null && !Std.isOfType(prop, String)) {
             o = o[prop];
             prop = null;
         }
@@ -352,7 +352,7 @@ class LogReferences extends ConsoleCore
         // values
         // EVENTS .. metadata name="Event"
         //;
-        var isClass:Bool = Std.is(obj, Class);
+        var isClass:Bool = Std.isOfType(obj, Class);
         var objClass:Class<Dynamic> = null;
         if(isClass)
         {
@@ -507,7 +507,7 @@ class LogReferences extends ConsoleCore
         //
         // display's parents and direct children
         //
-        if (Std.is(obj, DisplayObject)) {
+        if (Std.isOfType(obj, DisplayObject)) {
             var disp:DisplayObject = cast(obj, DisplayObject);
             var theParent:DisplayObjectContainer = cast disp.parent;
             if (theParent != null) {
@@ -522,7 +522,7 @@ class LogReferences extends ConsoleCore
             }
         }
 
-        if (Std.is(obj, DisplayObjectContainer)) {
+        if (Std.isOfType(obj, DisplayObjectContainer)) {
             props = [];
             var cont:DisplayObjectContainer = cast(obj, DisplayObjectContainer);
             var clen:Int = cont.numChildren;
@@ -536,9 +536,9 @@ class LogReferences extends ConsoleCore
         }
 
 
-        if(Std.is(obj, Stage))
+        if(Std.isOfType(obj, Stage))
         {
-            if(Std.is(obj, String)){
+            if(Std.isOfType(obj, String)){
                 report("", 1, true, ch);
                 report("String", 10, true, ch);
                 report(EscHTML(obj), 1, true, ch);
@@ -684,7 +684,7 @@ class LogReferences extends ConsoleCore
         /*try{
             props = [];
             for (X in obj) {
-                if(Std.is(X, String)){
+                if(Std.isOfType(X, String)){
                     if(refIndex != 0)
                         str = "<a href='event:cl_"+refIndex+"_"+X+" = '>"+X+"</a>";
                     else str = X;
@@ -698,7 +698,7 @@ class LogReferences extends ConsoleCore
         }*/
         //TODO: implement required
 
-        if(Std.is(obj, String)){
+        if(Std.isOfType(obj, String)){
             report("", 1, true, ch);
             report("String", 10, true, ch);
             report(EscHTML(obj), 1, true, ch);
@@ -848,7 +848,7 @@ class LogReferences extends ConsoleCore
     public static function ShortClassName(obj:Dynamic, eschtml:Bool = true):String{
         var str:String = getQualifiedClassName(obj);
         var ind:Int = str.indexOf("::");
-        var st:String = Std.is(obj, Class)?"*":"";
+        var st:String = Std.isOfType(obj, Class)?"*":"";
         str = st+str.substring(ind>=0?(ind+2):0)+st;
 
         trace("ShortClassName: " + str);
@@ -864,16 +864,16 @@ class LogReferences extends ConsoleCore
         if(Reflect.isFunction(value))
         {
             str = "builtin.as$0.MethodClosure";
-        }else if(Std.is(value, Float))
+        }else if(Std.isOfType(value, Float))
         {
             str = "Float";
-        }else if(Std.is(value, Int))
+        }else if(Std.isOfType(value, Int))
         {
             str = "Int";
-        }else if(Std.is(value, Bool))
+        }else if(Std.isOfType(value, Bool))
         {
             str = "Bool";
-        }else if(Std.is(value, String))
+        }else if(Std.isOfType(value, String))
         {
             str = "String";
         }else{

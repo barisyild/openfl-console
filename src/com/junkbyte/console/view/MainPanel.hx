@@ -207,24 +207,24 @@ class MainPanel extends ConsolePanel {
         init(640,100,true);
         registerDragger(txtField);
         //
-        if(Std.is(Reflect.field(console.so, CL_HISTORY), Array)){
+        if(Std.isOfType(Reflect.field(console.so, CL_HISTORY), Array)){
             _cmdsHistory = Reflect.field(console.so, CL_HISTORY);
         }else{
             Reflect.setField(console.so, CL_HISTORY, _cmdsHistory = new Array());
         }
         //
-        if(config.rememberFilterSettings && Std.is(Reflect.field(console.so, VIEWING_CH_HISTORY), Array)){
+        if(config.rememberFilterSettings && Std.isOfType(Reflect.field(console.so, VIEWING_CH_HISTORY), Array)){
             _viewingChannels = Reflect.field(console.so, VIEWING_CH_HISTORY);
         }else{
             Reflect.setField(console.so, VIEWING_CH_HISTORY, _viewingChannels = new Array());
         }
-        if(config.rememberFilterSettings && Std.is(Reflect.field(console.so, IGNORED_CH_HISTORY), Array)){
+        if(config.rememberFilterSettings && Std.isOfType(Reflect.field(console.so, IGNORED_CH_HISTORY), Array)){
             Reflect.setField(console.so, IGNORED_CH_HISTORY, _ignoredChannels = new Array());
         }
         if(_viewingChannels.length > 0 || _ignoredChannels == null){
             Reflect.setField(console.so, IGNORED_CH_HISTORY, _ignoredChannels = new Array());
         }
-        if(config.rememberFilterSettings && Std.is(Reflect.field(console.so, PRIORITY_HISTORY), Int))
+        if(config.rememberFilterSettings && Std.isOfType(Reflect.field(console.so, PRIORITY_HISTORY), Int))
         {
             _priority = Reflect.field(console.so, PRIORITY_HISTORY);
         }

@@ -70,12 +70,12 @@ class ConsoleTools extends ConsoleCore{
             }
             // figure out the depth and print it out.
             if(lastmcDO != null){
-                if(Std.is(lastmcDO, DisplayObjectContainer) && cast(lastmcDO, DisplayObjectContainer).contains(mcDO)){
+                if(Std.isOfType(lastmcDO, DisplayObjectContainer) && cast(lastmcDO, DisplayObjectContainer).contains(mcDO)){
                     steps++;
                 }else{
                     while(lastmcDO != null){
                         lastmcDO = lastmcDO.parent;
-                        if(Std.is(lastmcDO, DisplayObjectContainer)){
+                        if(Std.isOfType(lastmcDO, DisplayObjectContainer)){
                             if(steps>0){
                                 steps--;
                             }
@@ -96,13 +96,13 @@ class ConsoleTools extends ConsoleCore{
                 var ind:UInt = console.refs.setLogRef(mcDO);
                 var n:String = mcDO.name;
                 if(ind != 0) n = "<a href='event:cl_"+ind+"'>"+n+"</a>";
-                if(Std.is(mcDO, DisplayObjectContainer)){
+                if(Std.isOfType(mcDO, DisplayObjectContainer)){
                     n = "<b>"+n+"</b>";
                 }else{
                     n = "<i>"+n+"</i>";
                 }
                 str += n+" "+console.refs.makeRefTyped(mcDO);
-                report(str,Std.is(mcDO, DisplayObjectContainer)?5:2, true, ch);
+                report(str,Std.isOfType(mcDO, DisplayObjectContainer)?5:2, true, ch);
             }else if(!wasHiding){
                 wasHiding = true;
                 report(str+"...",5, true, ch);
@@ -119,9 +119,9 @@ class ConsoleTools extends ConsoleCore{
         if(obj == null){
             // could be null, undefined, NaN, 0, etc. all should be printed as is
             return "<p-2>"+obj+"</p-2>";
-        }else if(Std.is(obj, String)){
+        }else if(Std.isOfType(obj, String)){
             return '"'+LogReferences.EscHTML(cast(obj, String))+'"';
-        //}else if(t != ValueType.TObject || depth == 0 || Std.is(obj, ByteArray))
+        //}else if(t != ValueType.TObject || depth == 0 || Std.isOfType(obj, ByteArray))
         //TODO: implement required
         }else if(t != ValueType.TObject || depth == 0)
         {

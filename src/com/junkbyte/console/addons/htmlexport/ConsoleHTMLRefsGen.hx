@@ -85,11 +85,11 @@ class ConsoleHTMLRefsGen
         // should reuse code from LogReference, but not possible atm. wait for modular version.
 
         /*var V:XML = describeType(obj);
-        var cls:Dynamic = Std.is(obj, Class)?obj:obj.constructor;
+        var cls:Dynamic = Std.isOfType(obj, Class)?obj:obj.constructor;
         var clsV:XML = describeType(cls);*/
         //TODO: implement required
 
-        var isClass:Bool = Std.is(obj, Class);
+        var isClass:Bool = Std.isOfType(obj, Class);
 
         var result:Dynamic = {};
         var isstatic:Bool;

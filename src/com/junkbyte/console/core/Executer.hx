@@ -415,7 +415,7 @@ class Executer extends EventDispatcher{
                         var nss:Array<Namespace> = [AS3];
                         for(ns in nss){
                             var nsv:Dynamic = v.obj.ns::[basestr];
-                            if(Std.is(nsv, Function)){
+                            if(Std.isOfType(nsv, Function)){
                                 newbase = nsv;
                                 break;
                             }
@@ -676,7 +676,7 @@ class Executer extends EventDispatcher{
             if(_reserved.indexOf(key)<0){
                 v.obj = _saved;
                 v.prop = key;
-            }else if(Std.is(_saved, WeakObject)){
+            }else if(Std.isOfType(_saved, WeakObject)){
                 v.obj = cast(_saved, WeakObject).get(key);
             }else {
                 v.obj = Reflect.field(_saved, key);
@@ -741,7 +741,7 @@ class Executer extends EventDispatcher{
             case "&&":
                 return v1.value&&v2.value;
             case "is":
-                return Std.is(v1.value, v2.value);
+                return Std.isOfType(v1.value, v2.value);
             case "typeof":
                 return Type.typeof(v2.value);
             case "delete":

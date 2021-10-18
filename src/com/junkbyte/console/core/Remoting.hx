@@ -153,7 +153,7 @@ class Remoting extends ConsoleCore {
 
 
     private function synchronize(id:String, obj:Dynamic):Void {
-        if(!Std.is(obj, Bytes)){
+        if(!Std.isOfType(obj, Bytes)){
             report("Remoting sync error. Recieved non-ByteArray:"+obj, 9);
             return;
         }

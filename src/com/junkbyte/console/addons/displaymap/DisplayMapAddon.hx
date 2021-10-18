@@ -84,7 +84,7 @@ class DisplayMapAddon
         var callbackFunction:Function = function(#if (haxe_ver >= "4.2.0") ...args:Dynamic #else args:Array<Dynamic> #end):Void
         {
             var scope:Dynamic = console.cl.run("this");
-            if (Std.is(scope, DisplayObject))
+            if (Std.isOfType(scope, DisplayObject))
             {
                 start(cast(scope, DisplayObject), console);
             }

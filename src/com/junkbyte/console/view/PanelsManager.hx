@@ -81,7 +81,7 @@ class PanelsManager {
     }
 
     public function panelExists(n:String):Bool{
-        return Std.is(console.getChildByName(n), ConsolePanel)?true:false;
+        return Std.isOfType(console.getChildByName(n), ConsolePanel)?true:false;
     }
     /**
 		 * Set panel position and size.
@@ -242,7 +242,7 @@ class PanelsManager {
     public var displayRoller(get, set):Bool;
     public function get_displayRoller():Bool
     {
-        return Std.is(getPanel(RollerPanel.NAME), RollerPanel)?true:false;
+        return Std.isOfType(getPanel(RollerPanel.NAME), RollerPanel)?true:false;
     }
 
     public function set_displayRoller(n:Bool):Bool
@@ -392,7 +392,7 @@ class PanelsManager {
             }
             var numchildren:Int = console.numChildren;
             for(i in 0...numchildren){
-                if(Std.is(console.getChildAt(i), ConsolePanel))
+                if(Std.isOfType(console.getChildAt(i), ConsolePanel))
                 {
                     var panel:ConsolePanel = cast(console.getChildAt(i), ConsolePanel);
                     if(panel != null && panel.visible){

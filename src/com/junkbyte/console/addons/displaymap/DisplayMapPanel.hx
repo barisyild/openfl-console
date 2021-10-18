@@ -143,7 +143,7 @@ class DisplayMapPanel extends ConsolePanel
         {
             return "";
         }
-        if (Std.is(display, DisplayObjectContainer))
+        if (Std.isOfType(display, DisplayObjectContainer))
         {
             var string:String;
             var container:DisplayObjectContainer = cast(display, DisplayObjectContainer);
@@ -179,7 +179,7 @@ class DisplayMapPanel extends ConsolePanel
         {
             if (i == steps - 1)
             {
-                if (Std.is(display, DisplayObjectContainer))
+                if (Std.isOfType(display, DisplayObjectContainer))
                 {
                     str += makeLink(display, " &gt; ", "focus");
                 }

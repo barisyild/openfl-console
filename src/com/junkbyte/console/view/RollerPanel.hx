@@ -133,7 +133,7 @@ class RollerPanel extends ConsolePanel{
 
                     var n:String;
 
-                    if(Std.is(obj, DisplayObject))
+                    if(Std.isOfType(obj, DisplayObject))
                     {
                         n = cast(obj, DisplayObject).name;
                     }else if(Reflect.hasField(obj, "name"))
@@ -163,7 +163,7 @@ class RollerPanel extends ConsolePanel{
 
 
 
-                    if(console.config.displayRollerTilemapCapturingEnabled && Std.is(obj, Tilemap))
+                    if(console.config.displayRollerTilemapCapturingEnabled && Std.isOfType(obj, Tilemap))
                     {
                         str += __processTilemapString(cast obj, dolink, i + 1);
                     }
@@ -224,9 +224,9 @@ class RollerPanel extends ConsolePanel{
                     if(Reflect.hasField(tile, "name"))
                     {
                         n = Reflect.field(tile, "name");
-                    }else if(Std.is(tile, Tile)){
+                    }else if(Std.isOfType(tile, Tile)){
                         n = "Tile";
-                    }else if(Std.is(tile, TileContainer)){
+                    }else if(Std.isOfType(tile, TileContainer)){
                         n = "TileContainer";
                     }else{
                         n = "?";

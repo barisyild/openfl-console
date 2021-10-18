@@ -135,7 +135,7 @@ class KeyBinder extends ConsoleCore {
     private function canTrigger():Bool {
         // in try catch block incase the textfield is in another domain and we wont be able to access the type... (i think)
         try {
-            if(console.stage != null && Std.is(console.stage.focus, TextField)) {
+            if(console.stage != null && Std.isOfType(console.stage.focus, TextField)) {
                 var txt:TextField = cast(console.stage.focus, TextField);
                 if(txt.type == TextFieldType.INPUT) {
                     return false;

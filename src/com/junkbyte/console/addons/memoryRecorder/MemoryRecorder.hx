@@ -138,7 +138,7 @@ class MemoryRecorder extends EventDispatcher
         //var objectsMap:Object = new Object();
         for (sample in getSamples())
         {
-            if (Std.is(sample, NewObjectSample))
+            if (Std.isOfType(sample, NewObjectSample))
             {
                 var newSample:NewObjectSample = NewObjectSample(sample);
                 if (shouldPrintClass(newSample.type))

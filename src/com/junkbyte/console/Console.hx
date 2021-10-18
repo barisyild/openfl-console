@@ -191,9 +191,9 @@ class Console extends Sprite {
     {
         var error:Dynamic = Reflect.hasField(e, "error") ? Reflect.field(e, "error") : e; // for flash 9 compatibility
         var str:String = null;
-        if (Std.is(error, Error)){
+        if (Std.isOfType(error, Error)){
             str = _refs.makeString(error);
-        }else if (Std.is(error, ErrorEvent)){
+        }else if (Std.isOfType(error, ErrorEvent)){
             str = cast(error, ErrorEvent).text;
         }
         if(str == null){
@@ -837,7 +837,7 @@ class Console extends Sprite {
     //
     //
     public static function MakeChannelName(obj:Dynamic):String{
-        if(Std.is(obj, String)) return cast(obj, String);
+        if(Std.isOfType(obj, String)) return cast(obj, String);
         else if(obj) return LogReferences.ShortClassName(obj);
         return DEFAULT_CHANNEL;
     }
