@@ -23,13 +23,11 @@
 *
 */
 package com.junkbyte.console.vos;
-import openfl.utils.Dictionary;
 
-/**
- * @private
- */
-class WeakRef{
+#if !html5
+import haxe.ds.WeakMap;
 
+class WeakRef {
     private var _val:Dynamic;
     private var _strong:Bool; // strong flag
 
@@ -46,11 +44,10 @@ class WeakRef{
         if(_strong){
             return _val;
         }else{
-            /*for(X in Reflect.fields()){
+            var dict:WeakMap<Dynamic, Dynamic> = cast _val;
+            for(X in dict.keys()){
                 return X;
-            }*/
-            //TODO: implement required
-            return _val;
+            }
         }
         return null;
     }
@@ -59,10 +56,9 @@ class WeakRef{
         if(_strong){
             _val = ref;
         }else{
-            /*_val = {};
-            Reflect.setField(_val, ref, null);*/
-            //TODO: implement required
-            _val = ref;
+            var weakMap = new WeakMap<Dynamic, Dynamic>();
+            weakMap.set(ref, null);
+            _val = weakMap;
         }
         return ref;
     }
@@ -72,15 +68,49 @@ class WeakRef{
     public function get_strong():Bool{
         return _strong;
     }
-
-    /*
-    // Removed to save compile size
-    public function set_strong(b:Bool):Bool {
-        if(_strong != b){
-            var ref:Dynamic = reference;
-            _strong = b;
-            reference = ref;
-        }
-        return b;
-    }*/
 }
+#else
+class WeakRef {
+    private var _val:Dynamic;
+    private var _strong:Bool; // strong flag
+
+    // Known issue: storing a function reference that's on timeline don't seem to work on next frame. fix = manually store as strong ref.
+    // There is abilty to use strong reference incase you need to mix -
+    // weak and strong references together somewhere
+    public function new(ref:Dynamic, strong:Bool = false) {
+        _strong = strong;
+        reference = ref;
+    }
+
+    public var reference(get, set):Dynamic;
+    public function get_reference():Dynamic {
+        if(_strong){
+            return _val;
+        }else{
+            var weakRef:JavascriptWeakRef = _val;
+            return weakRef.deref();
+        }
+        return null;
+    }
+
+    public function set_reference(ref:Dynamic):Dynamic{
+        if(_strong){
+            _val = ref;
+        }else{
+            _val = new JavascriptWeakRef(ref);
+        }
+        return ref;
+    }
+
+    public var strong(get, never):Bool;
+
+    public function get_strong():Bool{
+        return _strong;
+    }
+}
+
+@:native("WeakRef") extern class JavascriptWeakRef {
+    public function new(element:Dynamic):Void;
+    public function deref():Dynamic;
+}
+#end
