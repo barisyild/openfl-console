@@ -312,11 +312,11 @@ class LogReferences extends ConsoleCore
 
 
     public function inspect(obj:Dynamic, viewAll:Bool= true, ch:String = null):Void {
-
-        if(!obj){
+        if(obj == null){
             report(obj, -2, true, ch);
             return;
         }
+
         var refIndex:UInt = setLogRef(obj);
         var showInherit:String = "";
         if(!viewAll)
