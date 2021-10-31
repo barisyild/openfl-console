@@ -852,8 +852,6 @@ class LogReferences extends ConsoleCore
         var st:String = Std.isOfType(obj, Class)?"*":"";
         str = st+str.substring(ind>=0?(ind+2):0)+st;
 
-        trace("ShortClassName: " + str);
-
         if(eschtml)
             return EscHTML(str);
         return str;
