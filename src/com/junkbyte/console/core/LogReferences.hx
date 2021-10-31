@@ -236,7 +236,7 @@ class LogReferences extends ConsoleCore
     private function handleString(str:String):Void {
         if(str == "refexit"){
             exitFocus();
-            console.setViewingChannels([]);
+            console.setViewingChannels(#if (haxe_ver >= "4.2.0") ... #end[]);
         }else if(str == "refprev"){
             historyInc(-2);
         }else if(str == "reffwd"){
@@ -274,7 +274,8 @@ class LogReferences extends ConsoleCore
     public function focus(o:Dynamic, full:Bool = false):Void{
         remoter.send("focus");
         console.clear(LogReferences.INSPECTING_CHANNEL);
-        console.setViewingChannels([LogReferences.INSPECTING_CHANNEL]);
+        console.setViewingChannels(#if (haxe_ver >= "4.2.0") ... #end[LogReferences.INSPECTING_CHANNEL]);
+        console.setViewingChannels(#if (haxe_ver >= "4.2.0") ... #end[LogReferences.INSPECTING_CHANNEL]);
 
         if(_history == null) _history = new Array();
 
@@ -293,7 +294,7 @@ class LogReferences extends ConsoleCore
 
     private function handleFocused():Void{
         console.clear(LogReferences.INSPECTING_CHANNEL);
-        console.setViewingChannels([LogReferences.INSPECTING_CHANNEL]);
+        console.setViewingChannels(#if (haxe_ver >= "4.2.0") ... #end[LogReferences.INSPECTING_CHANNEL]);
     }
 
     public function exitFocus():Void{

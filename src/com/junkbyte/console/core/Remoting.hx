@@ -360,7 +360,7 @@ class Remoting extends ConsoleCore {
     }
 
     private function loginSuccess():Void {
-        console.setViewingChannels([]);
+        console.setViewingChannels(#if (haxe_ver >= "4.2.0") ... #end[]);
         report("Login Successful", -1);
     }
 

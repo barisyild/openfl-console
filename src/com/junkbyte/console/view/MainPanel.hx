@@ -600,14 +600,14 @@ class MainPanel extends ConsolePanel {
     private function startFilter():Void{
         console.clear(Console.FILTER_CHANNEL);
         console.logs.addChannel(Console.FILTER_CHANNEL);
-        setViewingChannels([Console.FILTER_CHANNEL]);
+        setViewingChannels(#if (haxe_ver >= "4.2.0") ... #end[Console.FILTER_CHANNEL]);
     }
 
     private function endFilter():Void{
         _filterRegExp = null;
         _filterText = null;
         if(_viewingChannels.length == 1 && _viewingChannels[0] == Console.FILTER_CHANNEL){
-            setViewingChannels([Console.GLOBAL_CHANNEL]);
+            setViewingChannels(#if (haxe_ver >= "4.2.0") ... #end[Console.GLOBAL_CHANNEL]);
         }
     }
     private function makeLine(line:Log, showch:Bool):String{

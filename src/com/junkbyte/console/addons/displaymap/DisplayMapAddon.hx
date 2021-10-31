@@ -90,7 +90,7 @@ class DisplayMapAddon
             }
             else
             {
-                console.error(["Current scope", scope, "is not a DisplayObject."]);
+                console.error("Current scope", scope, "is not a DisplayObject.");
             }
         }
         console.addSlashCommand(commandName, callbackFunction);
