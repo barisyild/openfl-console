@@ -844,6 +844,10 @@ class MainPanel extends ConsolePanel {
 
     private function _updateMenu():Void{
         var str:String = "<r><high>";
+
+        str += "<a href=\"event:nothing\"> </a>";
+        //TODO: OpenFL "TextEvent.LINK" is not working properly, this is a temporary hack.
+
         if(_mini || !style.topMenu){
             str += "<menu><b> <a href=\"event:show\">‹</a>";
         }else {
@@ -1046,15 +1050,15 @@ class MainPanel extends ConsolePanel {
             current = toggleCHList(_ignoredChannels, chn);
             //setIgnoredChannels.apply(this, current);
             //TODO: implement required
-            setIgnoredChannels(current);
+            setIgnoredChannels(#if (haxe_ver >= "4.2.0") ...current #else current #end);
         }
         else if(_shift && chn != Console.GLOBAL_CHANNEL && _viewingChannels[0] != LogReferences.INSPECTING_CHANNEL){
             current = toggleCHList(_viewingChannels, chn);
             //setViewingChannels.apply(this, current);
             //TODO: implement required
-            setViewingChannels(current);
+            setViewingChannels(#if (haxe_ver >= "4.2.0") ...current #else current #end);
         }else{
-            console.setViewingChannels([chn]);
+            console.setViewingChannels(#if (haxe_ver >= "4.2.0") chn #else [chn] #end);
         }
     }
 
