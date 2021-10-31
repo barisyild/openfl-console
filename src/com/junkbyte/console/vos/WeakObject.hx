@@ -31,108 +31,42 @@ package com.junkbyte.console.vos;
 class WeakObject {
 
     private var _map:Map<String, WeakRef>;
-    private var _weakMap:Map<String, WeakRef>;
 
     public function new() {
         _map = new Map();
-        _weakMap = new Map();
     }
 
     public function get(n:String):Dynamic {
         var ref:WeakRef = getWeakRef(n);
-        return ref != null?ref.reference:null;
+        return ref != null ? ref.reference : null;
     }
 
     public function set(n:String, obj:Dynamic, strong:Bool = false):Void {
         remove(n);
 
         if(obj != null)
-        {
-            if(strong)
-            {
-                _map.set(n, new WeakRef(obj, strong));
-            }else{
-                _weakMap.set(n, new WeakRef(obj, strong));
-            }
-        }
+            _map.set(n, new WeakRef(obj, strong));
     }
 
     public function remove(n:String):Void {
-        if(_weakMap.exists(n))
-        {
-            _weakMap.remove(n);
-        }else if(_map.exists(n))
-        {
-            _map.remove(n);
-        }
+        _map.remove(n);
     }
 
     public function exists(n:String):Bool {
-        return _weakMap.exists(n) || _map.exists(n);
+        if(_map.exists(n))
+            return _map.get(n).reference != null;
+
+        return false;
     }
 
-    public function keys():Array<String>
-    {
+    public function keys():Array<String> {
         var keys:Array<String> = [];
-        for(key in _weakMap.keys())
-        {
-            keys.push(key);
-        }
         for(key in _map.keys())
-        {
             keys.push(key);
-        }
         return keys;
     }
 
     public function getWeakRef(n:String):WeakRef {
-        if(_weakMap.exists(n))
-            return _weakMap.get(n);
-        else if(_map.exists(n))
-            return _map.get(n);
-        return null;
+        return _map.get(n);
     }
-
-    /*public function getProperty(n:Dynamic):Dynamic {
-        return get(n);
-    }
-
-    public function callProperty(n:Dynamic, #if (haxe_ver >= "4.2.0") ...rest:Dynamic #else rest:Array<Dynamic> #end):Dynamic {
-        var o:Dynamic = get(n);
-        return o.apply(this, rest);
-    }
-
-    public function setProperty(n:Dynamic, v:Dynamic):Void {
-        set(n,v);
-    }
-
-    public  function nextName(index:Int):String {
-        return _item[index - 1];
-    }
-
-    public  function nextValue(index:Int):Dynamic {
-        return null;
-    }
-
-    public  function nextNameIndex(index:Int):Int {
-        if (index == 0) {
-            _item = new Array<Dynamic>();
-            for (x in Reflect.fields(_dir)) {
-            _item.push(x);
-            }
-        }
-        if (index < _item.length) {
-            return index + 1;
-        } else {
-            return 0;
-        }
-    }
-
-    public  function deleteProperty(name:Dynamic):Bool {
-        return Reflect.deleteField(_dir, name);
-    }
-
-    public function toString():String{
-        return "[WeakObject]";
-    }*/
 }
