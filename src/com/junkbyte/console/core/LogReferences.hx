@@ -101,7 +101,7 @@ class LogReferences extends ConsoleCore
             // 50s rather than all to be faster.
             var i:Int = ind-50;
             while(i>=0){
-                if(_refMap.exists(Std.string(i)))
+                if(!_refMap.exists(Std.string(i)))
                 {
                     _refMap.remove(Std.string(i));
                 }
