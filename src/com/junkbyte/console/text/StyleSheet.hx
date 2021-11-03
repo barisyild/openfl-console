@@ -1,8 +1,7 @@
-package openfl.text;
+package com.junkbyte.console.text;
 
-import openfl.events.EventDispatcher;
-
-class StyleSheet extends EventDispatcher {
+#if (!flash && openfl <= "9.1.0")
+class StyleSheet extends openfl.events.EventDispatcher {
     public var styleNames(get,never) : Array<Dynamic>;
     private var styles:Map<String, Dynamic>;
 
@@ -37,3 +36,11 @@ class StyleSheet extends EventDispatcher {
         styles.set(styleName, styleObject);
     }
 }
+#else
+class StyleSheet extends openfl.text.StyleSheet {
+    public function new() : Void
+    {
+        super();
+    }
+}
+#end

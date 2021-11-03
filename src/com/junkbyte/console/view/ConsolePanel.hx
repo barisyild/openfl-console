@@ -313,7 +313,7 @@ class ConsolePanel extends Sprite {
      */
     public function makeTF(n:String, back:Bool = false):TextField
     {
-        var txt:#if flash TextField #else ConsoleTextField #end = new #if flash TextField #else ConsoleTextField #end();
+        var txt:ConsoleTextField = new ConsoleTextField();
         txt.name = n;
         txt.styleSheet = style.styleSheet;
         if(back){

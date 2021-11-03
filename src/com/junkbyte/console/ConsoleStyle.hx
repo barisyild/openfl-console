@@ -24,11 +24,7 @@
 */
 package com.junkbyte.console;
 
-#if flash
-import flash.text.StyleSheet;
-#else
-import openfl.text.StyleSheet;
-#end
+import com.junkbyte.console.text.StyleSheet;
 
 class ConsoleStyle {
 
