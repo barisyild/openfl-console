@@ -88,15 +88,14 @@ class ConsolePanel extends Sprite {
         bg.graphics.clear();
         bg.graphics.beginFill(col>=0?col:style.backgroundColor, a>=0?a:style.backgroundAlpha);
         if(rounding < 0) rounding = style.roundBorder;
-        if(rounding <= 0)
-            bg.graphics.drawRect(0, 0, 100, 100);
+        if(rounding <= 0) bg.graphics.drawRect(0, 0, 100, 100);
         else {
+            //TODO: Fix Background after scale9Grid fixed.
+            #if flash
             bg.graphics.drawRoundRect(0, 0, rounding+10, rounding+10, rounding, rounding);
             bg.scale9Grid = new Rectangle(rounding*0.5, rounding*0.5, 10, 10);
-
-            //TODO: Fix cacheAsBitmap after scale9Grid fixed.
-            #if !flash
-            bg.cacheAsBitmap = true;
+            #else
+            bg.graphics.drawRect(0, 0, w, h);
             #end
         }
 
