@@ -109,7 +109,7 @@ class LogReferences extends ConsoleCore
         }
         return ind;
     }
-    public function getRefById(o:Dynamic):UInt
+    public function getRefById(o:Dynamic):Dynamic
     {
         return _refRev.get(o);
     }
@@ -390,6 +390,8 @@ class LogReferences extends ConsoleCore
         //
         // extends...
         //
+
+        trace(objClass);
 
         var fields = Executer.resolveAllFields(objClass);
 
