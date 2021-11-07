@@ -44,7 +44,7 @@ class CommandLine extends ConsoleCore {
 
     private static var RESERVED:Array<String> = [Executer.RETURNED, "base", "C"];
 
-    private var _saved:WeakObject;
+    private var _saved:WeakObject<String>;
 
     private var _scope:Dynamic;
     private var _prevScope:WeakRef;

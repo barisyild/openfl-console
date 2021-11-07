@@ -28,45 +28,61 @@ package com.junkbyte.console.vos;
  * @private
  */
 
-class WeakObject {
+import openfl.utils.Dictionary;
 
-    private var _map:Map<String, WeakRef>;
+@:generic class WeakObject<T> {
+
+    private var _dict:Dictionary<T, WeakRef> = new Dictionary<T, WeakRef>();
 
     public function new() {
-        _map = new Map();
+
     }
 
-    public function get(n:String):Dynamic {
+    public function get(n:T):Dynamic {
         var ref:WeakRef = getWeakRef(n);
         return ref != null ? ref.reference : null;
     }
 
-    public function set(n:String, obj:Dynamic, strong:Bool = false):Void {
+    public function set(n:T, obj:Dynamic, strong:Bool = false):Void {
         remove(n);
 
         if(obj != null)
-            _map.set(n, new WeakRef(obj, strong));
+            _dict.set(n, new WeakRef(obj, strong));
     }
 
-    public function remove(n:String):Void {
-        _map.remove(n);
+    public function remove(n:T):Void {
+        _dict.remove(n);
     }
 
-    public function exists(n:String):Bool {
-        if(_map.exists(n))
-            return _map.get(n).reference != null;
+    public function exists(n:T):Bool {
+        if(_dict.exists(n))
+            return get(n) != null;
 
         return false;
     }
 
-    public function keys():Array<String> {
-        var keys:Array<String> = [];
-        for(key in _map.keys())
+    public function getReferenceIndex(reference:Dynamic):Null<T>
+    {
+        for(key in _dict)
+        {
+            var weakRef = _dict.get(key);
+            if(weakRef.reference == reference)
+            {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
+    public function keys():Array<T> {
+        var keys:Array<T> = [];
+        for(key in _dict)
             keys.push(key);
         return keys;
     }
 
-    public function getWeakRef(n:String):WeakRef {
-        return _map.get(n);
+    public function getWeakRef(n:T):WeakRef {
+        return _dict.get(n);
     }
 }

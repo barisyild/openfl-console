@@ -677,7 +677,8 @@ class Executer extends EventDispatcher{
                 v.obj = _saved;
                 v.prop = key;
             }else if(Std.isOfType(_saved, WeakObject)){
-                v.obj = cast(_saved, WeakObject).get(key);
+                var weakObject:WeakObject<String> = cast _saved;
+                v.obj = weakObject.get(key);
             }else {
                 v.obj = Reflect.field(_saved, key);
             }

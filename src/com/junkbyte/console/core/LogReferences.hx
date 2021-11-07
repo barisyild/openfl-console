@@ -49,8 +49,7 @@ class LogReferences extends ConsoleCore
 
     public static inline var INSPECTING_CHANNEL:String = "⌂";
 
-    private var _refMap:WeakObject = new WeakObject();
-    private var _refRev:Dynamic = {};
+    private var _refRev:WeakObject<Int> = new WeakObject<Int>();
     private var _refIndex:UInt = 1;
 
     private var _dofull:Bool;
@@ -82,41 +81,37 @@ class LogReferences extends ConsoleCore
     }
     public function setLogRef(o:Dynamic):UInt{
         if(!config.useObjectLinking) return 0;
-        var ind:UInt = 0;
-        if(Reflect.hasField(_refRev, o))
+        var ind:Null<UInt> = _refRev.getReferenceIndex(o);
+
+        if(ind == null)
         {
-            ind = Reflect.field(_refRev, o);
+            ind = 0;
         }
+
         if(ind == 0){
             ind = _refIndex;
-            _refMap.set(Std.string(ind), o);
-            var test = _refMap.get(Std.string(ind));
-            _refRev[o] = ind;
+            _refRev.set(ind, o);
             if(config.objectHardReferenceTimer != 0)
             {
                 _currentBank.push(o);
             }
             _refIndex++;
-            // Look through every 50th older _refMap ids and delete empty ones
+            // Look through every 50th older _refRev ids and delete empty ones
             // 50s rather than all to be faster.
             var i:Int = ind-50;
             while(i>=0){
-                if(!_refMap.exists(Std.string(i)))
+                if(!_refRev.exists(ind))
                 {
-                    _refMap.remove(Std.string(i));
+                    _refRev.remove(ind);
                 }
                 i-=50;
             }
         }
         return ind;
     }
-    public function getRefId(o:Dynamic):UInt
+    public function getRefById(o:Dynamic):UInt
     {
-        return _refRev[o];
-    }
-    public function getRefById(ind:UInt):Dynamic
-    {
-        return _refMap.get(Std.string(ind));
+        return _refRev.get(o);
     }
 
     public function makeString(o:Dynamic, prop:Dynamic = null, html:Bool = false, maxlen:Int = -1):String {
