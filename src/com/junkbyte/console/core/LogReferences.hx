@@ -391,13 +391,17 @@ class LogReferences extends ConsoleCore
         // extends...
         //
 
+        #if openfl_console_debug
         trace(objClass);
+        #end
 
         var fields = Executer.resolveAllFields(objClass);
 
         if(fields == null)
         {
+            #if openfl_console_debug
             trace("fields null!");
+            #end
             //describeType can be used for flash?
             return;
         }

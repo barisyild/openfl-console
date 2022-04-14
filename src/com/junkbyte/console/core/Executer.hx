@@ -223,7 +223,9 @@ class Executer extends EventDispatcher{
             var typ = Type.typeof(_returned);
             if(typ == ValueType.TObject)
             {
+                #if openfl_console_debug
                 trace("setScope");
+                #end
                 _scope = _returned;
             }
         }
@@ -243,7 +245,9 @@ class Executer extends EventDispatcher{
     // aaa.bbb.ccc(1/2,3).ddd += fff+$g.hhh();
     //
     private function execOperations(str:String):ExeValue {
+        #if openfl_console_debug
         trace("execOperations: " + str);
+        #end
         var reg:EReg = new EReg('\\s*(((\\|\\||\\&\\&|[+|\\-|*|\\/|\\%|\\||\\&|\\^]|\\=\\=?|\\!\\=|\\>\\>?\\>?|\\<\\<?)\\=?)|=|\\~|\\sis\\s|typeof|delete\\s)\\s*', 'g');
         var result = FlashRegex.exec(str, reg);
         var seq:Array<Dynamic> = [];
@@ -254,8 +258,10 @@ class Executer extends EventDispatcher{
             while(result != null) {
                 var index:Int = result.index;
                 var operation:String = result.elements[0];
+                #if openfl_console_debug
                 trace("operation: " + operation);
                 trace("index: " + index);
+                #end
                 result = FlashRegex.exec(str, reg, index);
                 if(result==null)
                 {
@@ -323,7 +329,9 @@ class Executer extends EventDispatcher{
     // includes class path detection and 'new' operation
     //
     private function execSimple(str:String):ExeValue{
+        #if openfl_console_debug
         trace("execSimple: " + str);
+        #end
 
         var v:ExeValue = new ExeValue(_scope);
         //debug('execStrip: '+str);
@@ -343,7 +351,9 @@ class Executer extends EventDispatcher{
         var reg:EReg = ~/\.|\(/g;
         var result:Dynamic = FlashRegex.exec(str, reg);
         if(result == null || !Math.isNaN(Std.parseFloat(str))){
+            #if openfl_console_debug
             trace("execValue");
+            #end
             return execValue(str, _scope);
         }
         //
@@ -388,7 +398,9 @@ class Executer extends EventDispatcher{
         {
             var index:Int = result.index;
             var isFun:Bool = str.charAt(index)=="(";
+            #if openfl_console_debug
             trace("isFun: " + isFun);
+            #end
             var basestr:String = ignoreWhite(str.substring(previndex, index));
             //trace("_scopestr = "+basestr+ " v.base = "+v.value);
             var newv:ExeValue = previndex==0?execValue(basestr, v.value):new ExeValue(v.value, basestr);
@@ -396,8 +408,10 @@ class Executer extends EventDispatcher{
             if(isFun)
             {
                 var newbase:Dynamic = newv.value;
+                #if openfl_console_debug
                 trace("newbase: " + newbase);
                 trace("newbase string: " + str);
+                #end
 
                 var closeindex:Int = str.indexOf(")", index);
                 var paramstr:String = str.substring(index+1, closeindex);
@@ -467,7 +481,9 @@ class Executer extends EventDispatcher{
 
         if(!haxe.rtti.Rtti.hasRtti(resolveClass))
         {
+            #if openfl_console_debug
             trace("rtti not found!");
+            #end
             return null;
         }
 
@@ -658,8 +674,10 @@ class Executer extends EventDispatcher{
     // single values such as string, int, null, $a, ^1 and Classes without package.
     //
     private function execValue(str:String, base:Dynamic = null):ExeValue{
+        #if openfl_console_debug
         trace("execValueString: " + str);
         trace("execValueBase: " + base);
+        #end
         var v:ExeValue = new ExeValue();
         if (str == "true") {
             v.obj = cast true;
@@ -698,7 +716,9 @@ class Executer extends EventDispatcher{
             }
         }
         //debug("value: "+str+" = "+openfl.Lib.getQualifiedClassName(v.value)+" - "+v.value+" base:"+v.base);
+        #if openfl_console_debug
         trace("v: " + v);
+        #end
         return v;
     }
     // * typed cause it could be String +  OR comparison such as || or &&

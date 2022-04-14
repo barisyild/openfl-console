@@ -58,7 +58,9 @@ class FlashRegex {
             }
         }
 
+        #if openfl_console_debug
         trace("regexArraySize: " + regexArray.elements);
+        #end
 
         regexArray.index = search(text, regex, lastIndex);
 

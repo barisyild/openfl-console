@@ -176,7 +176,9 @@ class CommandLine extends ConsoleCore {
             hints.push(["..."]);
         }
 
+        #if openfl_console_debug
         trace(hints);
+        #end
         return hints;
     }
 
@@ -329,8 +331,10 @@ class CommandLine extends ConsoleCore {
                     _scopeStr = LogReferences.ShortClassName(_scope, false);
                     sendCmdScope2Remote();
                 }
+                #if openfl_console_debug
                 trace(returned);
                 trace(console.refs.makeRefTyped(returned));
+                #end
                 report("Changed to "+console.refs.makeRefTyped(returned), -1);
             }else{
                 if(say) report("Returned "+console.refs.makeString(returned), -1);
