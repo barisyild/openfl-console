@@ -164,6 +164,16 @@ class MemoryMonitor extends ConsoleCore
 
         if(n == null) n = className;
 
+        for(key in _objectsList.keys())
+        {
+            var ref:Dynamic = _objectsList.get(key).deref();
+            if(ref == obj)
+            {
+                unwatch(key);
+                break;
+            }
+        }
+
         if(_objectsList.exists(n)){
             n = n+"@"+openfl.Lib.getTimer()+"_"+Math.floor(Math.random()*100);
         }
