@@ -40,7 +40,9 @@ No special browser or player version is required.
 
 ### Completion Status
 
-* %60
+* %100
+
+### [Missing Features](https://github.com/barisyild/openfl-console/wiki/Missing-Features)
 
 Pull requests are welcome
 
