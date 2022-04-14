@@ -242,7 +242,7 @@ class Cc{
      * @param channel	Name of channel, if a non-string param is passed, it will use the object's class name as channel name.
      * @param ...strings	Strings to be logged, any type can be passed and will be converted to string or a link if it is an object/class.
      */
-    public static function warnch(channel:Dynamic, strings:Array<Dynamic>):Void{
+    public static function warnch(channel:Dynamic, #if (haxe_ver >= "4.2.0") ...strings:Dynamic #else strings:Array<Dynamic> #end):Void{
         if(_console != null) _console.addCh(channel, strings, Console.WARN);
     }
     /**
