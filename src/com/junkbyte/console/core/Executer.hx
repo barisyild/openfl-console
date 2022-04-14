@@ -454,6 +454,9 @@ class Executer extends EventDispatcher{
 
     public static function resolveAllFields(resolveClass:Class<Dynamic>):Dynamic
     {
+        if(resolveClass == null)
+            return null;
+
         var items:Dynamic = {};
         items.staticVariables = new Array<Dynamic>();
         items.staticFunctions = new Array<Dynamic>();
