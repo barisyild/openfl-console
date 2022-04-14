@@ -676,7 +676,7 @@ class Executer extends EventDispatcher{
             if(_reserved.indexOf(key)<0){
                 v.obj = _saved;
                 v.prop = key;
-            }else if(Std.isOfType(_saved, WeakObject)){
+            }else if(Std.isOfType(_saved, com.junkbyte.console.vos.WeakObject_String)){
                 var weakObject:WeakObject<String> = cast _saved;
                 v.obj = weakObject.get(key);
             }else {
