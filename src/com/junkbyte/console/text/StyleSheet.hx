@@ -37,7 +37,7 @@ class StyleSheet extends openfl.events.EventDispatcher {
     }
 }
 #else
-class StyleSheet extends openfl.text.StyleSheet {
+class StyleSheet extends #if flash flash.text.StyleSheet #else openfl.text.StyleSheet #end {
     public function new() : Void
     {
         super();
