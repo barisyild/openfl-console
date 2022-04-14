@@ -51,7 +51,9 @@ class MemoryMonitor extends ConsoleCore {
 
     public function watch(obj:Dynamic, n:String):String {
         var className:String = openfl.Lib.getQualifiedClassName(obj);
-        if(n == null) n = className+"@"+openfl.Lib.getTimer();
+        if(className == null) className = "Object";
+
+        if(n == null) n = className;
 
         if(_objectsList.exists(obj)){
             if(_namesList[_objectsList.get(obj)]){
@@ -158,7 +160,9 @@ class MemoryMonitor extends ConsoleCore
 
     public function watch(obj:Dynamic, n:String):String {
         var className:String = openfl.Lib.getQualifiedClassName(obj);
-        if(n == null) n = className+"@"+openfl.Lib.getTimer();
+        if(className == null) className = "Object";
+
+        if(n == null) n = className;
 
         if(_objectsList.exists(n)){
             n = n+"@"+openfl.Lib.getTimer()+"_"+Math.floor(Math.random()*100);
