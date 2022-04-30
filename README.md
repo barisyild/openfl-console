@@ -51,7 +51,7 @@ OpenFL Console is port of [Flash Console](https://github.com/junkbyte/flash-cons
 ### Installation
 
 ```
-haxelib git openfl-console https://github.com/barisyild/openfl-console.git
+haxelib install openfl-console
 ```
 
 #### add in your project.xml:
