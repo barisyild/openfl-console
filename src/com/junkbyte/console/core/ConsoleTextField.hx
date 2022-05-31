@@ -3,7 +3,7 @@ package com.junkbyte.console.core;
 import openfl.text.TextField;
 
 class ConsoleTextField extends TextField {
-    #if (!flash && openfl <= "9.1.0")
+    #if (!flash && openfl < "9.1.0")
     public var styleSheet:com.junkbyte.console.text.StyleSheet;
     #end
 
@@ -11,7 +11,7 @@ class ConsoleTextField extends TextField {
         super();
     }
 
-    #if (!flash && openfl <= "9.1.0")
+    #if (!flash && openfl < "9.1.0")
     @:setter(htmlText) private #if !flash override #end function set_htmlText(value:String)
     {
         var htmlText:String = value;

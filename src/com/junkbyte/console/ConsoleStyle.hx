@@ -24,7 +24,11 @@
 */
 package com.junkbyte.console;
 
+#if (!flash && openfl < "9.1.0")
 import com.junkbyte.console.text.StyleSheet;
+#else
+import openfl.text.StyleSheet;
+#end
 
 class ConsoleStyle {
 
