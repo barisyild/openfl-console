@@ -51,18 +51,18 @@ class MemoryTrackerPanel extends ConsolePanel
         e.stopPropagation();
     }
 
-    @:setter(width) public override function set_width(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(width) #else override #end public function set_width(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         super.width = value;
         txtField.width = value-6;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
-    @:setter(height) public override function set_height(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(height) #else override #end public function set_height(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         super.height = value;
         txtField.height = value-6;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
     private function onMenuRollOver(e:TextEvent):Void {

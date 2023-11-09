@@ -61,20 +61,20 @@ class HScriptPanel extends ConsolePanel
         registerDragger(txtField); // so that we can still drag from textfield
     }
 
-    @:setter(width) public override function set_width(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(width) #else override #end private function set_width(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         super.width = value;
         txtField.width = value-6;
         scriptField.width = value;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
-    @:setter(height) public override function set_height(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(height) #else override #end private function set_height(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         super.height = value;
         scriptField.y = txtField.height;
         scriptField.height = value - txtField.height - 6;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
     private function onMenuRollOver(e:TextEvent):Void {

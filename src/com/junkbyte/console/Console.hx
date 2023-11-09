@@ -406,55 +406,55 @@ class Console extends Sprite {
     //
     //
     //
-    @:getter(width) public #if !flash override #end function get_width()
+    #if (flash && haxe_ver < 4.3) @:getter(width) #else override #end public function get_width():Float
     {
         return _panels.mainPanel.width;
     }
 
-    @:setter(width) private #if !flash override #end function set_width(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(width) #else override #end public function set_width(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         _panels.mainPanel.width = value;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
-    @:getter(height) private #if !flash override #end function get_height()
+    #if (flash && haxe_ver < 4.3) @:getter(height) #else override #end private function get_height():Float
     {
         return _panels.mainPanel.height;
     }
 
-    @:setter(height) private #if !flash override #end function set_height(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(height) #else override #end public function set_height(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         _panels.mainPanel.height = value;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
-    @:setter(x) private #if !flash override #end function set_x(value:Float)
-    {
-        _panels.mainPanel.x = value;
-        #if !flash return value; #end
-    }
-
-    @:getter(x) private #if !flash override #end function get_x()
+    #if (flash && haxe_ver < 4.3) @:getter(x) #else override #end public function get_x():Float
     {
         return _panels.mainPanel.x;
     }
 
-    @:setter(y) private #if !flash override #end function set_y(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(x) #else override #end public function set_x(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
-        _panels.mainPanel.y = value;
-        #if !flash return value; #end
+        _panels.mainPanel.x = value;
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
-    @:getter(y) private #if !flash override #end function get_y()
+    #if (flash && haxe_ver < 4.3) @:getter(y) #else override #end public function get_y():Float
     {
         return _panels.mainPanel.y;
     }
 
-    @:setter(visible) private #if !flash override #end function set_visible(value:Bool)
+    #if (flash && haxe_ver < 4.3) @:setter(y) #else override #end public function set_y(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
+    {
+        _panels.mainPanel.y = value;
+        #if (!flash || haxe_ver >= 4.3) return value; #end
+    }
+
+    #if (flash && haxe_ver < 4.3) @:setter(visible) #else override #end public function set_visible(value:Bool):#if (!flash || haxe_ver >= 4.3) Bool #else Void #end
     {
         super.visible = value;
         if(value) _panels.mainPanel.visible = true;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
     //
     //

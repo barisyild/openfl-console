@@ -151,7 +151,7 @@ class GraphingPanel extends ConsolePanel {
         return lowTxt.visible;
     }*/
 
-    @:setter(width) public override function set_width(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(width) #else override #end public function set_width(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         super.width = value;
         lowTxt.width = value;
@@ -160,10 +160,10 @@ class GraphingPanel extends ConsolePanel {
         txtField.scrollH = txtField.maxScrollH;
         graph.graphics.clear();
         _needRedraw = true;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
-    @:setter(height) public override function set_height(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(height) #else override #end public function set_height(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         super.height = value;
         lowTxt.y = value-style.menuFontSize;
@@ -175,7 +175,7 @@ class GraphingPanel extends ConsolePanel {
         g.moveTo(0, graph.y);
         g.lineTo(width-startOffset, graph.y);
         g.lineTo(width-startOffset, value);
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
     //
     //

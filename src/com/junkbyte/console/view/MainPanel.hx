@@ -759,7 +759,7 @@ class MainPanel extends ConsolePanel {
     //
     // END OF SCROLL BAR STUFF
     //
-    @:setter(width) public override function set_width(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(width) #else override #end private function set_width(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         _lockScrollUpdate = true;
         super.width = value;
@@ -778,10 +778,10 @@ class MainPanel extends ConsolePanel {
         _needUpdateMenu = true;
         _needUpdateTrace = true;
         _lockScrollUpdate = false;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
-    @:setter(width) private override function set_height(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(height) #else override #end private function set_height(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         _lockScrollUpdate = true;
         var fsize:Int = style.menuFontSize;
@@ -820,7 +820,7 @@ class MainPanel extends ConsolePanel {
         _atBottom = true;
         _needUpdateTrace = true;
         _lockScrollUpdate = false;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
     private function updateTraceFHeight():Void{

@@ -12,7 +12,7 @@ class ConsoleTextField extends TextField {
     }
 
     #if (!flash && openfl <= "9.1.0")
-    @:setter(htmlText) private #if !flash override #end function set_htmlText(value:String)
+    #if (flash && haxe_ver < 4.3) @:setter(htmlText) #else override #end private function set_htmlText(value:String):#if (!flash || haxe_ver >= 4.3) String #else Void #end
     {
         var htmlText:String = value;
         var styles:Map<String, Dynamic> = styleSheet.getStyles();
@@ -53,7 +53,7 @@ class ConsoleTextField extends TextField {
 
         super.htmlText = htmlText;
 
-        #if !flash return htmlText; #end
+        #if (!flash || haxe_ver >= 4.3) return htmlText; #end
     }
     #end
 }

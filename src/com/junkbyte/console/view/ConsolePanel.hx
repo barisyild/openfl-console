@@ -116,39 +116,39 @@ class ConsolePanel extends Sprite {
         dispatchEvent(new Event(Event.CLOSE));
     }
 
-    @:setter(visible) private #if !flash override #end function set_visible(value:Bool)
+    #if (flash && haxe_ver < 4.3) @:setter(visible) #else override #end private function set_visible(value:Bool):#if (!flash || haxe_ver >= 4.3) Bool #else Void #end
     {
         super.visible = value;
         dispatchEvent(new Event(VISIBLITY_CHANGED));
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
     //
     // SIZE
     //
-    @:getter(width) private #if !flash override #end function get_width()
+    #if (flash && haxe_ver < 4.3) @:getter(width) #else override #end private function get_width():Float
     {
         return bg.width;
     }
 
-    @:setter(width) private #if !flash override #end function set_width(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(width) #else override #end private function set_width(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         if(value < minWidth) value = minWidth;
         if(scaler != null) scaler.x = value;
         bg.width = value;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
 
-    @:getter(height) private #if !flash override #end function get_height()
+    #if (flash && haxe_ver < 4.3) @:getter(height) #else override #end private function get_height():Float
     {
         return bg.height;
     }
 
-    @:setter(height) private #if !flash override #end function set_height(value:Float)
+    #if (flash && haxe_ver < 4.3) @:setter(height) #else override #end private function set_height(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end
     {
         if(value < minHeight) value = minHeight;
         if(scaler != null) scaler.y = value;
         bg.height = value;
-        #if !flash return value; #end
+        #if (!flash || haxe_ver >= 4.3) return value; #end
     }
     //
     // MOVING
