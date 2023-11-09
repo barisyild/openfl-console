@@ -41,6 +41,7 @@ import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
+import com.junkbyte.console.abstracts.RFloat;
 
 class ConsolePanel extends Sprite {
 
@@ -195,7 +196,7 @@ class ConsolePanel extends Sprite {
     }
 
     private function updateDragText():Void {
-        _resizeTxt.htmlText = "<low>"+x+","+y+"</low>";
+        _resizeTxt.htmlText = "<low>"+(x:RFloat)+","+(y:RFloat)+"</low>";
     }
     private function onDraggerMouseUp(e:MouseEvent):Void {
         stopDragging();
