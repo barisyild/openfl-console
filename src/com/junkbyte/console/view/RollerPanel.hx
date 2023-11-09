@@ -45,6 +45,7 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.utils.Dictionary;
+import com.junkbyte.console.abstracts.RFloat;
 
 /**
 	 * @private
@@ -154,7 +155,7 @@ class RollerPanel extends ConsolePanel{
                         ind = console.refs.setLogRef(stg);
                         if(ind != 0) str +=  "<p3><a href='event:cl_"+ind+"'><i>Stage</i></a> ";
                         else str += "<p3><i>Stage</i> ";
-                        str +=  "["+stg.mouseX+","+stg.mouseY+"]</p3><br/>";
+                        str +=  "["+(stg.mouseX:RFloat)+","+(stg.mouseY:RFloat)+"]</p3><br/>";
                     }else if(i == len-1){
                         str +=  "<p5>"+n+"</p5><br/>";
                     }else {
