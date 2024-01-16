@@ -28,11 +28,9 @@ package com.junkbyte.console.vos;
  * @private
  */
 
-import openfl.utils.Dictionary;
+@:generic class WeakObject<T:Dynamic> {
 
-@:generic class WeakObject<T> {
-
-    private var _dict:Dictionary<T, WeakRef> = new Dictionary<T, WeakRef>();
+    private var _dict:Map<T, WeakRef> = new Map<T, WeakRef>();
 
     public function new() {
 
@@ -63,7 +61,7 @@ import openfl.utils.Dictionary;
 
     public function getReferenceIndex(reference:Dynamic):Null<T>
     {
-        for(key in _dict)
+        for(key in _dict.keys())
         {
             var weakRef = _dict.get(key);
             if(weakRef.reference == reference)
@@ -77,7 +75,7 @@ import openfl.utils.Dictionary;
 
     public function keys():Array<T> {
         var keys:Array<T> = [];
-        for(key in _dict)
+        for(key in _dict.keys())
             keys.push(key);
         return keys;
     }
