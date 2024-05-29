@@ -57,9 +57,13 @@ class Ruler extends Sprite {
     private var _master:Console;
     private var _config : ConsoleConfig;
     private var _area:Rectangle;
-    private var _pointer:Shape;
+    private var _pointerRight:Shape;
+    private var _pointerLeft:Shape;
+    private var _pointerTop:Shape;
+    private var _pointerBottom:Shape;
     private var _posTxt:TextField;
     private var _zoom:Bitmap;
+    private var background:Sprite;
     private var _points:Array<Point>;
 
     public function new(console:Console) {
@@ -68,14 +72,26 @@ class Ruler extends Sprite {
         _config = console.config;
         buttonMode = true;
         _points = new Array();
-        _pointer = new Shape();
-        addChild(_pointer);
-        var p:Point = new Point();
-        p = globalToLocal(p);
-        _area = new Rectangle(-console.stage.stageWidth*1.5+p.x, -console.stage.stageHeight*1.5+p.y, console.stage.stageWidth*3, console.stage.stageHeight*3);
-        graphics.beginFill(_config.style.backgroundColor, 0.2);
-        graphics.drawRect(_area.x, _area.y, _area.width, _area.height);
-        graphics.endFill();
+
+        _pointerLeft = new Shape();
+        addChild(_pointerLeft);
+
+        _pointerRight = new Shape();
+        addChild(_pointerRight);
+
+        _pointerTop = new Shape();
+        addChild(_pointerTop);
+
+        _pointerBottom = new Shape();
+        addChild(_pointerBottom);
+        updateSize();
+
+        background = new Sprite();
+        background.alpha = 0.2;
+        background.graphics.beginFill(_config.style.backgroundColor);
+        background.graphics.drawRect(_area.x, _area.y, _area.width, _area.height);
+        background.graphics.endFill();
+        addChild(background);
         //
         _posTxt = _master.panels.mainPanel.makeTF("positionText", true);
         _posTxt.autoSize = TextFieldAutoSize.LEFT;
@@ -91,14 +107,41 @@ class Ruler extends Sprite {
         if(_config.rulerHidesMouse) Mouse.hide();
         _master.report("<b>Ruler started. Click on two locations to measure.</b>", -1);
     }
+
+    private function updateSize():Void
+    {
+        var p:Point = new Point();
+        p = globalToLocal(p);
+        _area = new Rectangle(-p.x, -p.y, _master.stage.stageWidth, _master.stage.stageHeight);
+
+        var pointerLineHeight:Int = Math.floor(_master.stage.stageHeight);
+        var pointerLineWidth:Int = Math.floor(_master.stage.stageWidth);
+
+        _pointerRight.graphics.clear();
+        _pointerRight.graphics.lineStyle(1, 0xAACC00, 1);
+        _pointerRight.graphics.moveTo(p.x, 0);
+        _pointerRight.graphics.lineTo(p.x - pointerLineWidth, 0);
+
+        _pointerLeft.graphics.clear();
+        _pointerLeft.graphics.lineStyle(1, 0xAACC00, 1);
+        _pointerLeft.graphics.moveTo(pointerLineWidth - p.x, 0);
+        _pointerLeft.graphics.lineTo(p.x, 0);
+
+        _pointerTop.graphics.clear();
+        _pointerTop.graphics.lineStyle(1, 0xAACC00, 1);
+        _pointerTop.graphics.moveTo(0, p.y - pointerLineHeight);
+        _pointerTop.graphics.lineTo(0, p.y);
+
+        _pointerBottom.graphics.clear();
+        _pointerBottom.graphics.lineStyle(1, 0xAACC00, 1);
+        _pointerBottom.graphics.moveTo(0, p.x);
+        _pointerBottom.graphics.lineTo(0, pointerLineHeight - p.x);
+    }
+
     private function onMouseMove(e:MouseEvent = null):Void {
-        _pointer.graphics.clear();
-        _pointer.graphics.lineStyle(1, 0xAACC00, 1);
-        _pointer.graphics.moveTo(_area.x, mouseY);
-        _pointer.graphics.lineTo(_area.x+_area.width, mouseY);
-        _pointer.graphics.moveTo(mouseX, _area.y);
-        _pointer.graphics.lineTo(mouseX, _area.y+_area.height);
-        _pointer.blendMode = BlendMode.INVERT;
+        _pointerLeft.x = _pointerRight.x =  _pointerTop.x = _pointerBottom.x = mouseX;
+        _pointerLeft.y = _pointerRight.y =  _pointerTop.y = _pointerBottom.y = mouseY;
+
         _posTxt.text = "<low>"+mouseX+","+mouseY+"</low>";
         //
         var bmd:BitmapData = new BitmapData(30, 30);
@@ -139,16 +182,19 @@ class Ruler extends Sprite {
         }else if(_points.length==1){
             _zoom.bitmapData = null;
             if(_config.rulerHidesMouse) Mouse.show();
-            removeChild(_pointer);
+            removeChild(_pointerLeft);
+            removeChild(_pointerRight);
+            removeChild(_pointerTop);
+            removeChild(_pointerBottom);
             removeChild(_posTxt);
             removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
             p = _points[0];
             var p2:Point =  new Point(e.localX, e.localY);
             _points.push(p2);
+
+            // Update Size
+            background.alpha = 0.4;
             graphics.clear();
-            graphics.beginFill(style.backgroundColor, 0.4);
-            graphics.drawRect(_area.x, _area.y, _area.width, _area.height);
-            graphics.endFill();
             graphics.lineStyle(1.5, 0xFF0000);
             graphics.drawCircle(p.x, p.y, 4);
             graphics.lineStyle(1.5, 0xFF9900);
