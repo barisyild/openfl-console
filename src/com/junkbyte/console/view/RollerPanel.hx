@@ -179,7 +179,7 @@ class RollerPanel extends ConsolePanel{
         var str:String = "";
         var parentBlackList:Array<Tile> = [];
 
-        var tileDepthArray:Array<com.junkbyte.console.core.TileDepth> = cast TileTools.hitList(tilemap);
+        var tileDepthArray:Array<com.junkbyte.console.core.TileTools.TileDepth> = cast TileTools.hitList(tilemap);
 
         if(tileDepthArray != null)
         {
