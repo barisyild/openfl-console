@@ -28,7 +28,133 @@ package com.junkbyte.console.core;
 /**
  * @private
  */
-#if !html5
+#if jvm
+import java.lang.ref.WeakReference;
+import openfl.system.System;
+import openfl.errors.Error;
+import com.junkbyte.console.Console;
+
+private class WatchEntry {
+    public var ref:WeakReference<Dynamic>;
+    public var name:String;
+
+    public function new(obj:Dynamic, name:String) {
+        ref = new WeakReference<Dynamic>(obj);
+        this.name = name;
+    }
+}
+
+class MemoryMonitor extends ConsoleCore {
+    private var _namesList:Map<String, Bool>;
+    private var _objectsList:Map<Int, Array<WatchEntry>>;
+    private var _count:UInt;
+
+    public function new(m:Console) {
+        super(m);
+        _namesList = new Map();
+        _objectsList = new Map();
+        console.remoter.registerCallback("gc", gc);
+    }
+
+    private function find(obj:Dynamic):WatchEntry {
+        var bucket = _objectsList.get(java.lang.System.identityHashCode(obj));
+        if(bucket != null) for(entry in bucket) if(entry.ref.get() == obj) return entry;
+        return null;
+    }
+
+    public function watch(obj:Dynamic, n:String):String {
+        var className:String = openfl.Lib.getQualifiedClassName(obj);
+        if(className == null) className = "Object";
+        if(n == null) n = className;
+        var entry = find(obj);
+        if(entry != null && _namesList.exists(entry.name)){
+            unwatch(entry.name);
+        }
+        if(_namesList.exists(n)){
+            entry = find(obj);
+            if(entry != null && entry.name == n){
+                _count--;
+            }else{
+                n = n+"@"+openfl.Lib.getTimer()+"_"+Math.floor(Math.random()*100);
+            }
+        }
+        _namesList.set(n, true);
+        _count++;
+        entry = find(obj);
+        if(entry != null){
+            entry.name = n;
+        }else{
+            var key = java.lang.System.identityHashCode(obj);
+            var bucket = _objectsList.get(key);
+            if(bucket == null){
+                bucket = [];
+                _objectsList.set(key, bucket);
+            }
+            bucket.push(new WatchEntry(obj, n));
+        }
+        return n;
+    }
+
+    public function unwatch(n:String):Void {
+        for(key in [for(k in _objectsList.keys()) k]){
+            var bucket = _objectsList.get(key);
+            var kept = [for(entry in bucket) if(entry.name != n) entry];
+            if(kept.length == 0) _objectsList.remove(key) else _objectsList.set(key, kept);
+        }
+        if(_namesList.exists(n))
+        {
+            _namesList.remove(n);
+            _count--;
+        }
+    }
+
+    public function update():Void {
+        if(_count == 0) return;
+        var alive:Map<String, Bool> = new Map();
+        for(key in [for(k in _objectsList.keys()) k]){
+            var bucket = _objectsList.get(key);
+            var kept = [for(entry in bucket) if(entry.ref.get() != null) entry];
+            for(entry in kept) alive.set(entry.name, true);
+            if(kept.length == 0) _objectsList.remove(key) else if(kept.length != bucket.length) _objectsList.set(key, kept);
+        }
+        var arr:Array<String> = new Array();
+        for(name in [for(k in _namesList.keys()) k]){
+            if(!alive.exists(name)){
+                arr.push(name);
+                _namesList.remove(name);
+                _count--;
+            }
+        }
+        if(arr.length != 0) report("<b>GARBAGE COLLECTED "+arr.length+" item(s): </b>"+arr.join(", "),-2);
+    }
+
+    public var count(get, never):UInt;
+    public function get_count():UInt {
+        return _count;
+    }
+
+    public function gc():Void {
+        if(remoter.remoting == Remoting.RECIEVER){
+            try{
+                remoter.send("gc");
+            }catch(e:Error){
+                report(e,10);
+            }
+        }else{
+            var ok:Bool = false;
+            try{
+                if(Reflect.hasField(System, "gc")) {
+                    System.gc();
+                    ok = true;
+                }
+            }catch(e:Error){
+            }
+            var str:String = "Manual garbage collection "+(ok?"successful.":"FAILED. You need debugger version of flash player.");
+            report(str,(ok?-1:10));
+        }
+    }
+}
+#elseif !html5
 import haxe.ds.WeakMap;
 import openfl.system.System;
 import openfl.errors.Error;

@@ -24,7 +24,43 @@
 */
 package com.junkbyte.console.vos;
 
-#if !html5
+#if jvm
+import java.lang.ref.WeakReference;
+
+class WeakRef {
+    private var _val:Dynamic;
+    private var _strong:Bool;
+
+    public function new(ref:Dynamic, strong:Bool = false) {
+        _strong = strong;
+        reference = ref;
+    }
+
+    public var reference(get, set):Dynamic;
+    public function get_reference():Dynamic {
+        if(_strong){
+            return _val;
+        }
+        var weakRef:WeakReference<Dynamic> = cast _val;
+        return weakRef == null ? null : weakRef.get();
+    }
+
+    public function set_reference(ref:Dynamic):Dynamic{
+        if(_strong){
+            _val = ref;
+        }else{
+            _val = new WeakReference<Dynamic>(ref);
+        }
+        return ref;
+    }
+
+    public var strong(get, never):Bool;
+
+    public function get_strong():Bool{
+        return _strong;
+    }
+}
+#elseif !html5
 import haxe.ds.WeakMap;
 
 class WeakRef {
