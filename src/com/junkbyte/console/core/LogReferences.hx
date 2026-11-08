@@ -127,7 +127,7 @@ class LogReferences extends ConsoleCore
         if(Std.isOfType(v, Error)) {
             var err:Error = cast(v, Error);
             // err.getStackTrace() is not supported in non-debugger players...
-            var stackstr:String = Reflect.hasField(err, "getStackTrace")?err.getStackTrace():Std.string(err);
+            var stackstr:String = #if java err.getStackTraceString() #else Reflect.hasField(err, "getStackTrace")?err.getStackTrace():Std.string(err) #end;
             if(stackstr != null){
                 return stackstr;
             }
